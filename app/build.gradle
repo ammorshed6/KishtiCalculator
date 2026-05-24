@@ -5,6 +5,8 @@ plugins {
 android {
     compileSdk 34
 
+    namespace "com.kishti.calculator"
+
     defaultConfig {
         applicationId "com.kishti.calculator"
         minSdk 21
