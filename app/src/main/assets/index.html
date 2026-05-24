@@ -6,521 +6,459 @@
 <title>কিস্তি ক্যালকুলেটর</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-:root {
-  --primary: #1565C0;
-  --primary-dark: #0D47A1;
-  --primary-light: #E3F2FD;
-  --bg: #F0F4F8;
-  --card: #FFFFFF;
-  --text: #1A1A2E;
-  --text-light: #6B7280;
-  --border: #E5E7EB;
-  --radius: 12px;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'Noto Sans Bengali','Hind Siliguri',sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; }
-.header { background: var(--primary); color: white; padding: 16px 20px; font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(21,101,192,0.3); }
-.nav { display: flex; background: white; border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; position: sticky; top: 57px; z-index: 99; }
-.nav::-webkit-scrollbar { display: none; }
-.nav-tab { padding: 11px 13px; cursor: pointer; white-space: nowrap; font-size: 12.5px; font-weight: 600; color: var(--text-light); border-bottom: 3px solid transparent; margin-bottom: -1px; user-select: none; }
-.nav-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
-.tab-content { display: none; padding: 14px; }
-.tab-content.active { display: block; }
-.card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 6px rgba(0,0,0,0.07); }
-.card-title { font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 3px; }
-.card-desc { font-size: 12px; color: var(--text-light); margin-bottom: 13px; line-height: 1.5; }
-.input-group { margin-bottom: 12px; }
-label { display: block; font-size: 11.5px; font-weight: 600; color: var(--text-light); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.3px; }
-input[type="number"] { width: 100%; padding: 11px 13px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 16px; font-family: inherit; outline: none; background: #FAFAFA; }
-input[type="number"]:focus { border-color: var(--primary); background: white; }
-.btn { width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 4px; }
-.btn:active { transform: scale(0.98); }
-.btn-primary { background: var(--primary); color: white; }
-.btn-secondary { background: var(--primary-light); color: var(--primary); margin-top: 12px; }
-.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-.result-box { background: #F8FAFF; border-radius: 10px; padding: 11px 10px; text-align: center; border: 1px solid #DBEAFE; }
-.result-box.big { grid-column: 1/-1; background: var(--primary); color: white; border: none; }
-.result-box.big .rlabel { color: rgba(255,255,255,0.75); }
-.result-box.full { grid-column: 1/-1; }
-.rlabel { font-size: 11px; font-weight: 600; color: var(--text-light); margin-bottom: 4px; }
-.rvalue { font-size: 18px; font-weight: 700; }
-.rvalue.sm { font-size: 14px; }
-.info-box { background: #FFF8E1; border: 1px solid #FFE082; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #5D4037; line-height: 1.6; margin-bottom: 13px; }
-.table-wrap { overflow-x: auto; border-radius: 8px; margin-top: 8px; }
-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 300px; }
-th { background: var(--primary); color: white; padding: 10px 6px; text-align: center; font-weight: 600; white-space: nowrap; }
-th:first-child { border-radius: 8px 0 0 0; }
-th:last-child { border-radius: 0 8px 0 0; }
-td { padding: 9px 6px; text-align: center; border-bottom: 1px solid #F3F4F6; }
-tr:nth-child(even) td { background: #F9FAFB; }
-tr:last-child td { border-bottom: none; }
-.tfoot-total td { background: #1565C0 !important; color: white; font-weight: 700; font-size: 13px; }
-.tfoot-prin td { background: #E3F2FD !important; color: #1565C0; font-weight: 600; font-size: 12px; }
-.tfoot-int td { background: #FFF3E0 !important; color: #E65100; font-weight: 600; font-size: 12px; }
-.tfoot-grand td { background: #E8F5E9 !important; color: #2E7D32; font-weight: 700; font-size: 13px; border-top: 2px solid #43A047; }
-.tfoot-total td:first-child { border-radius: 0; }
-.hidden { display: none; }
-.cmp-row { padding: 11px 0; border-bottom: 1px solid var(--border); }
-.cmp-row:last-child { border-bottom: none; }
-.cmp-title { font-weight: 700; font-size: 13px; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
-.cmp-meta { display: flex; gap: 10px; flex-wrap: wrap; }
-.cmp-meta-item { font-size: 12px; color: var(--text-light); }
-.cmp-meta-item strong { color: var(--text); }
-.badge { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-.b-red { background:#FEE2E2;color:#991B1B; }
-.b-blue { background:#DBEAFE;color:#1E40AF; }
-.b-green { background:#DCFCE7;color:#166534; }
-.b-orange { background:#FEF3C7;color:#92400E; }
-.b-purple { background:#F3E8FF;color:#6B21A8; }
-.b-teal { background:#CCFBF1;color:#134E4A; }
-.winner { display:inline-flex;align-items:center;gap:4px;background:#DCFCE7;color:#166534;border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700; }
+:root{--p:#1565C0;--pl:#E3F2FD;--bg:#F0F4F8;--card:#fff;--txt:#1A1A2E;--muted:#6B7280;--bdr:#E5E7EB;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Noto Sans Bengali','Hind Siliguri',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;padding-bottom:80px;}
+.hdr{background:var(--p);color:#fff;padding:15px 18px;font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(21,101,192,.3);}
+.nav{display:flex;background:#fff;border-bottom:1px solid var(--bdr);overflow-x:auto;scrollbar-width:none;position:sticky;top:54px;z-index:99;}
+.nav::-webkit-scrollbar{display:none;}
+.ntab{padding:11px 13px;cursor:pointer;white-space:nowrap;font-size:12.5px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px;user-select:none;}
+.ntab.on{color:var(--p);border-bottom-color:var(--p);}
+.tab{display:none;padding:14px;}
+.tab.on{display:block;}
+.card{background:var(--card);border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,.07);}
+.ctitle{font-size:15px;font-weight:700;color:var(--p);margin-bottom:4px;}
+.cdesc{font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5;}
+.igrp{margin-bottom:12px;}
+.igrp label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.3px;}
+.igrp input{width:100%;padding:12px 13px;border:1.5px solid var(--bdr);border-radius:8px;font-size:16px;font-family:inherit;outline:none;background:#fafafa;}
+.igrp input:focus{border-color:var(--p);background:#fff;}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;background:var(--p);color:#fff;margin-top:4px;}
+.btn2{background:var(--pl);color:var(--p);margin-top:12px;}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
+.rbox{background:#F8FAFF;border-radius:10px;padding:12px 10px;text-align:center;border:1px solid #DBEAFE;}
+.rbox.big{grid-column:1/-1;background:var(--p);color:#fff;border:none;}
+.rbox.big .rl{color:rgba(255,255,255,.75);}
+.rbox.full{grid-column:1/-1;}
+.rl{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;}
+.rv{font-size:18px;font-weight:700;}
+.rv.sm{font-size:14px;}
+.ibox{background:#FFF8E1;border:1px solid #FFE082;border-radius:8px;padding:10px 12px;font-size:12px;color:#5D4037;line-height:1.6;margin-bottom:12px;}
+.twrap{overflow-x:auto;border-radius:8px;margin-top:8px;}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:300px;}
+th{background:var(--p);color:#fff;padding:10px 6px;text-align:center;font-weight:600;white-space:nowrap;}
+th:first-child{border-radius:8px 0 0 0;}th:last-child{border-radius:0 8px 0 0;}
+td{padding:9px 6px;text-align:center;border-bottom:1px solid #F3F4F6;}
+tr:nth-child(even) td{background:#F9FAFB;}
+.ft td{background:#1565C0!important;color:#fff;font-weight:700;font-size:13px;}
+.fp td{background:#E3F2FD!important;color:#1565C0;font-weight:600;font-size:12px;}
+.fi td{background:#FFF3E0!important;color:#E65100;font-weight:600;font-size:12px;}
+.fg td{background:#E8F5E9!important;color:#2E7D32;font-weight:700;font-size:13px;border-top:2px solid #43A047;}
+.hidden{display:none;}
+.toast{display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#323232;color:#fff;padding:12px 22px;border-radius:24px;font-size:13px;z-index:9999;text-align:center;max-width:85%;box-shadow:0 4px 12px rgba(0,0,0,.3);}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;}
+.br{background:#FEE2E2;color:#991B1B;}.bb{background:#DBEAFE;color:#1E40AF;}
+.bpu{background:#F3E8FF;color:#6B21A8;}.bg{background:#DCFCE7;color:#166534;}
+.bo{background:#FEF3C7;color:#92400E;}
+.win{display:inline-flex;align-items:center;gap:4px;background:#DCFCE7;color:#166534;border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;}
+.cr{padding:11px 0;border-bottom:1px solid var(--bdr);}
+.cr:last-child{border-bottom:none;}
+.ct{font-weight:700;font-size:13px;margin-bottom:5px;display:flex;align-items:center;gap:8px;}
+.cm{display:flex;gap:10px;flex-wrap:wrap;}
+.ci{font-size:12px;color:var(--muted);}
+.ci strong{color:var(--txt);}
 </style>
 </head>
 <body>
-
-<div id="toast" style="display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#323232;color:white;padding:12px 22px;border-radius:24px;font-size:14px;z-index:9999;text-align:center;max-width:85%;box-shadow:0 4px 12px rgba(0,0,0,0.3)"></div>
-<div class="header"><span>📊</span> কিস্তি ক্যালকুলেটর</div>
-
+<div class="toast" id="toast"></div>
+<div class="hdr"><span>📊</span>কিস্তি ক্যালকুলেটর</div>
 <div class="nav">
-  <div class="nav-tab active" onclick="switchTab('fr')">সমান হার</div>
-  <div class="nav-tab" onclick="switchTab('mr')">মাসিক রেস্ট</div>
-  <div class="nav-tab" onclick="switchTab('qr')">ত্রৈমাসিক রেস্ট</div>
-  <div class="nav-tab" onclick="switchTab('rb')">ক্রমহ্রাসমান</div>
-  <div class="nav-tab" onclick="switchTab('bp')">বুলেট</div>
-  <div class="nav-tab" onclick="switchTab('cmp')">📈 তুলনা</div>
+  <div class="ntab on" id="nt-fr" onclick="sw('fr')">সমান হার</div>
+  <div class="ntab" id="nt-mr" onclick="sw('mr')">মাসিক রেস্ট</div>
+  <div class="ntab" id="nt-qr" onclick="sw('qr')">ত্রৈমাসিক রেস্ট</div>
+  <div class="ntab" id="nt-rb" onclick="sw('rb')">ক্রমহ্রাসমান</div>
+  <div class="ntab" id="nt-bp" onclick="sw('bp')">বুলেট</div>
+  <div class="ntab" id="nt-cm" onclick="sw('cm')">📈 তুলনা</div>
 </div>
 
-<!-- ===== FLAT RATE ===== -->
-<div id="tab-fr" class="tab-content active">
+<!-- FLAT RATE -->
+<div class="tab on" id="tab-fr">
   <div class="card">
-    <div class="card-title">সমান হার (Flat Rate)</div>
-    <div class="card-desc">মূল ঋণের উপর শুরু থেকেই সুদ নির্ধারিত হয়। বাকি ঋণ কমলেও সুদ কমে না। সাধারণত ব্যক্তিগত ও ভোক্তা ঋণে ব্যবহৃত।</div>
-    <div class="input-group"><label>ঋণের পরিমাণ (টাকা)</label><input type="number" id="fr-p" placeholder="১,০০,০০০"></div>
-    <div class="input-group"><label>বার্ষিক সুদের হার (%)</label><input type="number" id="fr-r" placeholder="১২"></div>
-    <div class="input-group"><label>মেয়াদ (মাস)</label><input type="number" id="fr-n" placeholder="২৪"></div>
-    <button class="btn btn-primary" onclick="calcFR()">হিসাব করুন</button>
+    <div class="ctitle">সমান হার (Flat Rate)</div>
+    <div class="cdesc">মূল ঋণের উপর শুরু থেকেই সুদ নির্ধারিত। বাকি ঋণ কমলেও সুদ কমে না।</div>
+    <div class="igrp"><label>ঋণের পরিমাণ (টাকা)</label><input type="text" inputmode="decimal" id="fr-p" placeholder="যেমন: 100000"></div>
+    <div class="igrp"><label>বার্ষিক সুদের হার (%)</label><input type="text" inputmode="decimal" id="fr-r" placeholder="যেমন: 12"></div>
+    <div class="igrp"><label>মেয়াদ (মাস)</label><input type="text" inputmode="numeric" id="fr-n" placeholder="যেমন: 24"></div>
+    <button class="btn" id="btn-fr">হিসাব করুন</button>
   </div>
-  <div id="fr-res" class="card hidden">
-    <div class="card-title">ফলাফল</div>
-    <div class="result-grid">
-      <div class="result-box big"><div class="rlabel">মাসিক কিস্তি</div><div class="rvalue" id="fr-monthly">—</div></div>
-      <div class="result-box"><div class="rlabel">মোট সুদ</div><div class="rvalue sm" id="fr-tint">—</div></div>
-      <div class="result-box"><div class="rlabel">মোট পরিশোধ</div><div class="rvalue sm" id="fr-tpay">—</div></div>
-      <div class="result-box full"><div class="rlabel">কার্যকর বার্ষিক সুদহার (APR)</div><div class="rvalue sm" id="fr-eff">—</div></div>
+  <div class="card hidden" id="fr-res">
+    <div class="ctitle">ফলাফল</div>
+    <div class="rgrid">
+      <div class="rbox big"><div class="rl">মাসিক কিস্তি</div><div class="rv" id="fr-m">—</div></div>
+      <div class="rbox"><div class="rl">মোট সুদ</div><div class="rv sm" id="fr-ti">—</div></div>
+      <div class="rbox"><div class="rl">মোট পরিশোধ</div><div class="rv sm" id="fr-tp">—</div></div>
+      <div class="rbox full"><div class="rl">কার্যকর বার্ষিক সুদহার</div><div class="rv sm" id="fr-ap">—</div></div>
     </div>
-    <button class="btn btn-secondary" onclick="doShare('fr')">📤 রিপোর্ট শেয়ার</button>
+    <button class="btn btn2" id="sh-fr">📤 শেয়ার</button>
   </div>
-  <div id="fr-sched" class="card hidden">
-    <div class="card-title">সম্পূর্ণ শিডিউল</div>
-    <div class="table-wrap"><table>
-      <thead><tr><th>মাস</th><th>কিস্তি</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead>
-      <tbody id="fr-tbody"></tbody>
-    </table></div>
+  <div class="card hidden" id="fr-sc">
+    <div class="ctitle">সম্পূর্ণ শিডিউল</div>
+    <div class="twrap"><table><thead><tr><th>মাস</th><th>কিস্তি</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead><tbody id="fr-tb"></tbody></table></div>
   </div>
 </div>
 
-<!-- ===== MONTHLY REST ===== -->
-<div id="tab-mr" class="tab-content">
+<!-- MONTHLY REST -->
+<div class="tab" id="tab-mr">
   <div class="card">
-    <div class="card-title">মাসিক রেস্ট (Monthly Rest)</div>
-    <div class="card-desc">প্রতি মাসে বাকি ঋণের উপর সুদ হিসাব হয় এবং সুদ মূল ঋণের সাথে যোগ (চক্রবৃদ্ধি) হয়। বাংলাদেশের বেশিরভাগ ব্যাংক এই পদ্ধতি ব্যবহার করে।</div>
-    <div class="info-box">📌 সূত্র: কার্যকর মাসিক হার = বার্ষিক হার ÷ ১২<br>EMI = P × r × (1+r)ⁿ ÷ [(1+r)ⁿ − 1]</div>
-    <div class="input-group"><label>ঋণের পরিমাণ (টাকা)</label><input type="number" id="mr-p" placeholder="১,০০,০০০"></div>
-    <div class="input-group"><label>বার্ষিক সুদের হার (%)</label><input type="number" id="mr-r" placeholder="১২"></div>
-    <div class="input-group"><label>মেয়াদ (মাস)</label><input type="number" id="mr-n" placeholder="২৪"></div>
-    <button class="btn btn-primary" onclick="calcMR()">হিসাব করুন</button>
+    <div class="ctitle">মাসিক রেস্ট (Monthly Rest)</div>
+    <div class="cdesc">প্রতি মাসে বাকি ঋণের উপর সুদ চক্রবৃদ্ধি হয়। বেশিরভাগ ব্যাংক এই পদ্ধতি ব্যবহার করে।</div>
+    <div class="ibox">📌 কার্যকর মাসিক হার = বার্ষিক হার ÷ ১২</div>
+    <div class="igrp"><label>ঋণের পরিমাণ (টাকা)</label><input type="text" inputmode="decimal" id="mr-p" placeholder="যেমন: 100000"></div>
+    <div class="igrp"><label>বার্ষিক সুদের হার (%)</label><input type="text" inputmode="decimal" id="mr-r" placeholder="যেমন: 12"></div>
+    <div class="igrp"><label>মেয়াদ (মাস)</label><input type="text" inputmode="numeric" id="mr-n" placeholder="যেমন: 24"></div>
+    <button class="btn" id="btn-mr">হিসাব করুন</button>
   </div>
-  <div id="mr-res" class="card hidden">
-    <div class="card-title">ফলাফল</div>
-    <div class="result-grid">
-      <div class="result-box big"><div class="rlabel">মাসিক EMI (সমান কিস্তি)</div><div class="rvalue" id="mr-emi">—</div></div>
-      <div class="result-box"><div class="rlabel">কার্যকর মাসিক হার</div><div class="rvalue sm" id="mr-mr">—</div></div>
-      <div class="result-box"><div class="rlabel">কার্যকর বার্ষিক হার</div><div class="rvalue sm" id="mr-apr">—</div></div>
-      <div class="result-box"><div class="rlabel">মোট সুদ</div><div class="rvalue sm" id="mr-tint">—</div></div>
-      <div class="result-box"><div class="rlabel">মোট পরিশোধ</div><div class="rvalue sm" id="mr-tpay">—</div></div>
+  <div class="card hidden" id="mr-res">
+    <div class="ctitle">ফলাফল</div>
+    <div class="rgrid">
+      <div class="rbox big"><div class="rl">মাসিক EMI</div><div class="rv" id="mr-e">—</div></div>
+      <div class="rbox"><div class="rl">কার্যকর মাসিক হার</div><div class="rv sm" id="mr-mr">—</div></div>
+      <div class="rbox"><div class="rl">কার্যকর বার্ষিক হার</div><div class="rv sm" id="mr-ap">—</div></div>
+      <div class="rbox"><div class="rl">মোট সুদ</div><div class="rv sm" id="mr-ti">—</div></div>
+      <div class="rbox"><div class="rl">মোট পরিশোধ</div><div class="rv sm" id="mr-tp">—</div></div>
     </div>
-    <button class="btn btn-secondary" onclick="doShare('mr')">📤 রিপোর্ট শেয়ার</button>
+    <button class="btn btn2" id="sh-mr">📤 শেয়ার</button>
   </div>
-  <div id="mr-sched" class="card hidden">
-    <div class="card-title">সম্পূর্ণ শিডিউল</div>
-    <div class="table-wrap"><table>
-      <thead><tr><th>মাস</th><th>EMI</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead>
-      <tbody id="mr-tbody"></tbody>
-    </table></div>
+  <div class="card hidden" id="mr-sc">
+    <div class="ctitle">সম্পূর্ণ শিডিউল</div>
+    <div class="twrap"><table><thead><tr><th>মাস</th><th>EMI</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead><tbody id="mr-tb"></tbody></table></div>
   </div>
 </div>
 
-<!-- ===== QUARTERLY REST ===== -->
-<div id="tab-qr" class="tab-content">
+<!-- QUARTERLY REST -->
+<div class="tab" id="tab-qr">
   <div class="card">
-    <div class="card-title">ত্রৈমাসিক রেস্ট (Quarterly Rest)</div>
-    <div class="card-desc">প্রতি ৩ মাস পরপর সুদ মূল ঋণের সাথে যোগ (চক্রবৃদ্ধি) হয়। মাসিক রেস্টের চেয়ে সুদ কিছুটা বেশি পড়ে। কিছু ব্যাংক এই পদ্ধতি ব্যবহার করে।</div>
-    <div class="info-box">📌 সূত্র: ত্রৈমাসিক হার = বার্ষিক হার ÷ ৪<br>কার্যকর মাসিক হার = (১ + ত্রৈমাসিক হার)^(১/৩) − ১</div>
-    <div class="input-group"><label>ঋণের পরিমাণ (টাকা)</label><input type="number" id="qr-p" placeholder="১,০০,০০০"></div>
-    <div class="input-group"><label>বার্ষিক সুদের হার (%)</label><input type="number" id="qr-r" placeholder="১২"></div>
-    <div class="input-group"><label>মেয়াদ (মাস)</label><input type="number" id="qr-n" placeholder="২৪"></div>
-    <button class="btn btn-primary" onclick="calcQR()">হিসাব করুন</button>
+    <div class="ctitle">ত্রৈমাসিক রেস্ট (Quarterly Rest)</div>
+    <div class="cdesc">প্রতি ৩ মাস পরপর সুদ চক্রবৃদ্ধি হয়। মাসিক রেস্টের চেয়ে সুদ কিছুটা বেশি পড়ে।</div>
+    <div class="ibox">📌 কার্যকর মাসিক হার = (১ + বার্ষিক÷৪)^(১/৩) − ১</div>
+    <div class="igrp"><label>ঋণের পরিমাণ (টাকা)</label><input type="text" inputmode="decimal" id="qr-p" placeholder="যেমন: 100000"></div>
+    <div class="igrp"><label>বার্ষিক সুদের হার (%)</label><input type="text" inputmode="decimal" id="qr-r" placeholder="যেমন: 12"></div>
+    <div class="igrp"><label>মেয়াদ (মাস)</label><input type="text" inputmode="numeric" id="qr-n" placeholder="যেমন: 24"></div>
+    <button class="btn" id="btn-qr">হিসাব করুন</button>
   </div>
-  <div id="qr-res" class="card hidden">
-    <div class="card-title">ফলাফল</div>
-    <div class="result-grid">
-      <div class="result-box big"><div class="rlabel">মাসিক EMI (সমান কিস্তি)</div><div class="rvalue" id="qr-emi">—</div></div>
-      <div class="result-box"><div class="rlabel">কার্যকর মাসিক হার</div><div class="rvalue sm" id="qr-mr">—</div></div>
-      <div class="result-box"><div class="rlabel">কার্যকর বার্ষিক হার (APR)</div><div class="rvalue sm" id="qr-apr">—</div></div>
-      <div class="result-box"><div class="rlabel">মোট সুদ</div><div class="rvalue sm" id="qr-tint">—</div></div>
-      <div class="result-box"><div class="rlabel">মোট পরিশোধ</div><div class="rvalue sm" id="qr-tpay">—</div></div>
+  <div class="card hidden" id="qr-res">
+    <div class="ctitle">ফলাফল</div>
+    <div class="rgrid">
+      <div class="rbox big"><div class="rl">মাসিক EMI</div><div class="rv" id="qr-e">—</div></div>
+      <div class="rbox"><div class="rl">কার্যকর মাসিক হার</div><div class="rv sm" id="qr-mr">—</div></div>
+      <div class="rbox"><div class="rl">কার্যকর বার্ষিক হার</div><div class="rv sm" id="qr-ap">—</div></div>
+      <div class="rbox"><div class="rl">মোট সুদ</div><div class="rv sm" id="qr-ti">—</div></div>
+      <div class="rbox"><div class="rl">মোট পরিশোধ</div><div class="rv sm" id="qr-tp">—</div></div>
     </div>
-    <button class="btn btn-secondary" onclick="doShare('qr')">📤 রিপোর্ট শেয়ার</button>
+    <button class="btn btn2" id="sh-qr">📤 শেয়ার</button>
   </div>
-  <div id="qr-sched" class="card hidden">
-    <div class="card-title">সম্পূর্ণ শিডিউল</div>
-    <div class="table-wrap"><table>
-      <thead><tr><th>মাস</th><th>EMI</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead>
-      <tbody id="qr-tbody"></tbody>
-    </table></div>
+  <div class="card hidden" id="qr-sc">
+    <div class="ctitle">সম্পূর্ণ শিডিউল</div>
+    <div class="twrap"><table><thead><tr><th>মাস</th><th>EMI</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead><tbody id="qr-tb"></tbody></table></div>
   </div>
 </div>
 
-<!-- ===== REDUCING BALANCE ===== -->
-<div id="tab-rb" class="tab-content">
+<!-- REDUCING BALANCE -->
+<div class="tab" id="tab-rb">
   <div class="card">
-    <div class="card-title">ক্রমহ্রাসমান ব্যালেন্স (Reducing Balance)</div>
-    <div class="card-desc">আসল সমান কিস্তিতে কাটা হয়। সুদ বাকি ঋণের উপর হিসাব হয়, তাই মাসিক পেমেন্ট ধীরে ধীরে কমে। কিস্তি সমান নয়।</div>
-    <div class="input-group"><label>ঋণের পরিমাণ (টাকা)</label><input type="number" id="rb-p" placeholder="১,০০,০০০"></div>
-    <div class="input-group"><label>বার্ষিক সুদের হার (%)</label><input type="number" id="rb-r" placeholder="১২"></div>
-    <div class="input-group"><label>মেয়াদ (মাস)</label><input type="number" id="rb-n" placeholder="২৪"></div>
-    <button class="btn btn-primary" onclick="calcRB()">হিসাব করুন</button>
+    <div class="ctitle">ক্রমহ্রাসমান (Reducing Balance)</div>
+    <div class="cdesc">আসল সমান কিস্তিতে কাটা হয়, সুদ বাকি ঋণের উপর। মাসিক পেমেন্ট ধীরে কমে।</div>
+    <div class="igrp"><label>ঋণের পরিমাণ (টাকা)</label><input type="text" inputmode="decimal" id="rb-p" placeholder="যেমন: 100000"></div>
+    <div class="igrp"><label>বার্ষিক সুদের হার (%)</label><input type="text" inputmode="decimal" id="rb-r" placeholder="যেমন: 12"></div>
+    <div class="igrp"><label>মেয়াদ (মাস)</label><input type="text" inputmode="numeric" id="rb-n" placeholder="যেমন: 24"></div>
+    <button class="btn" id="btn-rb">হিসাব করুন</button>
   </div>
-  <div id="rb-res" class="card hidden">
-    <div class="card-title">ফলাফল</div>
-    <div class="result-grid">
-      <div class="result-box big"><div class="rlabel">১ম মাসের কিস্তি</div><div class="rvalue" id="rb-first">—</div></div>
-      <div class="result-box"><div class="rlabel">শেষ মাসের কিস্তি</div><div class="rvalue sm" id="rb-last">—</div></div>
-      <div class="result-box"><div class="rlabel">মোট সুদ</div><div class="rvalue sm" id="rb-tint">—</div></div>
-      <div class="result-box full"><div class="rlabel">মোট পরিশোধ</div><div class="rvalue sm" id="rb-tpay">—</div></div>
+  <div class="card hidden" id="rb-res">
+    <div class="ctitle">ফলাফল</div>
+    <div class="rgrid">
+      <div class="rbox big"><div class="rl">১ম মাসের কিস্তি</div><div class="rv" id="rb-f">—</div></div>
+      <div class="rbox"><div class="rl">শেষ মাসের কিস্তি</div><div class="rv sm" id="rb-l">—</div></div>
+      <div class="rbox"><div class="rl">মোট সুদ</div><div class="rv sm" id="rb-ti">—</div></div>
+      <div class="rbox full"><div class="rl">মোট পরিশোধ</div><div class="rv sm" id="rb-tp">—</div></div>
     </div>
-    <button class="btn btn-secondary" onclick="doShare('rb')">📤 রিপোর্ট শেয়ার</button>
+    <button class="btn btn2" id="sh-rb">📤 শেয়ার</button>
   </div>
-  <div id="rb-sched" class="card hidden">
-    <div class="card-title">সম্পূর্ণ শিডিউল</div>
-    <div class="table-wrap"><table>
-      <thead><tr><th>মাস</th><th>কিস্তি</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead>
-      <tbody id="rb-tbody"></tbody>
-    </table></div>
+  <div class="card hidden" id="rb-sc">
+    <div class="ctitle">সম্পূর্ণ শিডিউল</div>
+    <div class="twrap"><table><thead><tr><th>মাস</th><th>কিস্তি</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead><tbody id="rb-tb"></tbody></table></div>
   </div>
 </div>
 
-<!-- ===== BULLET ===== -->
-<div id="tab-bp" class="tab-content">
+<!-- BULLET -->
+<div class="tab" id="tab-bp">
   <div class="card">
-    <div class="card-title">বুলেট পেমেন্ট (Bullet Payment)</div>
-    <div class="card-desc">মেয়াদ চলাকালীন শুধু সুদ পরিশোধ করতে হয়। মেয়াদ শেষে পুরো আসল একসাথে পরিশোধ করতে হয়। ব্যবসায়িক ঋণে প্রচলিত।</div>
-    <div class="input-group"><label>ঋণের পরিমাণ (টাকা)</label><input type="number" id="bp-p" placeholder="১,০০,০০০"></div>
-    <div class="input-group"><label>বার্ষিক সুদের হার (%)</label><input type="number" id="bp-r" placeholder="১২"></div>
-    <div class="input-group"><label>মেয়াদ (মাস)</label><input type="number" id="bp-n" placeholder="২৪"></div>
-    <button class="btn btn-primary" onclick="calcBP()">হিসাব করুন</button>
+    <div class="ctitle">বুলেট পেমেন্ট (Bullet)</div>
+    <div class="cdesc">মেয়াদ চলাকালীন শুধু সুদ দিতে হয়। মেয়াদ শেষে পুরো আসল একসাথে পরিশোধ।</div>
+    <div class="igrp"><label>ঋণের পরিমাণ (টাকা)</label><input type="text" inputmode="decimal" id="bp-p" placeholder="যেমন: 100000"></div>
+    <div class="igrp"><label>বার্ষিক সুদের হার (%)</label><input type="text" inputmode="decimal" id="bp-r" placeholder="যেমন: 12"></div>
+    <div class="igrp"><label>মেয়াদ (মাস)</label><input type="text" inputmode="numeric" id="bp-n" placeholder="যেমন: 24"></div>
+    <button class="btn" id="btn-bp">হিসাব করুন</button>
   </div>
-  <div id="bp-res" class="card hidden">
-    <div class="card-title">ফলাফল</div>
-    <div class="result-grid">
-      <div class="result-box big"><div class="rlabel">মাসিক সুদ পেমেন্ট</div><div class="rvalue" id="bp-monthly">—</div></div>
-      <div class="result-box"><div class="rlabel">শেষ মাসে পরিশোধ</div><div class="rvalue sm" id="bp-final">—</div></div>
-      <div class="result-box"><div class="rlabel">মোট সুদ</div><div class="rvalue sm" id="bp-tint">—</div></div>
-      <div class="result-box full"><div class="rlabel">মোট পরিশোধ</div><div class="rvalue sm" id="bp-tpay">—</div></div>
+  <div class="card hidden" id="bp-res">
+    <div class="ctitle">ফলাফল</div>
+    <div class="rgrid">
+      <div class="rbox big"><div class="rl">মাসিক সুদ পেমেন্ট</div><div class="rv" id="bp-m">—</div></div>
+      <div class="rbox"><div class="rl">শেষ মাসে পরিশোধ</div><div class="rv sm" id="bp-fi">—</div></div>
+      <div class="rbox"><div class="rl">মোট সুদ</div><div class="rv sm" id="bp-ti">—</div></div>
+      <div class="rbox full"><div class="rl">মোট পরিশোধ</div><div class="rv sm" id="bp-tp">—</div></div>
     </div>
-    <button class="btn btn-secondary" onclick="doShare('bp')">📤 রিপোর্ট শেয়ার</button>
+    <button class="btn btn2" id="sh-bp">📤 শেয়ার</button>
   </div>
-  <div id="bp-sched" class="card hidden">
-    <div class="card-title">সম্পূর্ণ শিডিউল</div>
-    <div class="table-wrap"><table>
-      <thead><tr><th>মাস</th><th>পেমেন্ট</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead>
-      <tbody id="bp-tbody"></tbody>
-    </table></div>
+  <div class="card hidden" id="bp-sc">
+    <div class="ctitle">সম্পূর্ণ শিডিউল</div>
+    <div class="twrap"><table><thead><tr><th>মাস</th><th>পেমেন্ট</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead><tbody id="bp-tb"></tbody></table></div>
   </div>
 </div>
 
-<!-- ===== COMPARE ===== -->
-<div id="tab-cmp" class="tab-content">
+<!-- COMPARE -->
+<div class="tab" id="tab-cm">
   <div class="card">
-    <div class="card-title">সব পদ্ধতির তুলনা</div>
-    <div class="card-desc">একই ঋণে সব পদ্ধতিতে মোট সুদ কত পড়ে তুলনা করুন।</div>
-    <div class="input-group"><label>ঋণের পরিমাণ (টাকা)</label><input type="number" id="cmp-p" placeholder="১,০০,০০০"></div>
-    <div class="input-group"><label>বার্ষিক সুদের হার (%)</label><input type="number" id="cmp-r" placeholder="১২"></div>
-    <div class="input-group"><label>মেয়াদ (মাস)</label><input type="number" id="cmp-n" placeholder="২৪"></div>
-    <button class="btn btn-primary" onclick="calcCMP()">তুলনা করুন</button>
+    <div class="ctitle">সব পদ্ধতির তুলনা</div>
+    <div class="cdesc">একই ঋণে সব পদ্ধতিতে মোট সুদ তুলনা করুন।</div>
+    <div class="igrp"><label>ঋণের পরিমাণ (টাকা)</label><input type="text" inputmode="decimal" id="cm-p" placeholder="যেমন: 100000"></div>
+    <div class="igrp"><label>বার্ষিক সুদের হার (%)</label><input type="text" inputmode="decimal" id="cm-r" placeholder="যেমন: 12"></div>
+    <div class="igrp"><label>মেয়াদ (মাস)</label><input type="text" inputmode="numeric" id="cm-n" placeholder="যেমন: 24"></div>
+    <button class="btn" id="btn-cm">তুলনা করুন</button>
   </div>
-  <div id="cmp-res" class="hidden">
-    <div class="card">
-      <div class="card-title">মোট সুদ তুলনা চার্ট</div>
-      <canvas id="cmp-chart" style="margin-top:10px"></canvas>
-    </div>
-    <div class="card">
-      <div class="card-title">বিস্তারিত তুলনা</div>
-      <div id="cmp-detail"></div>
-    </div>
-    <button class="btn btn-secondary" onclick="doShare('cmp')" style="margin-bottom:16px">📤 তুলনা রিপোর্ট শেয়ার</button>
+  <div class="hidden" id="cm-res">
+    <div class="card"><div class="ctitle">মোট সুদ তুলনা চার্ট</div><canvas id="cm-chart" style="margin-top:10px"></canvas></div>
+    <div class="card"><div class="ctitle">বিস্তারিত তুলনা</div><div id="cm-det"></div></div>
+    <button class="btn btn2" id="sh-cm" style="margin-bottom:16px">📤 তুলনা রিপোর্ট শেয়ার</button>
   </div>
 </div>
 
 <script>
-const R = id => document.getElementById(id);
-const fmt = n => '৳' + Math.round(n).toLocaleString();
-const fmtn = n => Math.round(n).toLocaleString();
-const show = id => R(id).classList.remove('hidden');
-let stored = {}, cmpChart = null;
+// ── Utilities ─────────────────────────────────────────────
+function g(id){return document.getElementById(id);}
+function show(id){g(id).classList.remove('hidden');}
+function fmt(n){return '\u09F3'+Math.round(n).toLocaleString();}
+function fmtn(n){return Math.round(n).toLocaleString();}
 
-// বাংলা সংখ্যা → আরবি সংখ্যা রূপান্তর
-function toNum(id) {
-  const val = R(id).value.trim()
-    .replace(/[০]/g,'0').replace(/[১]/g,'1').replace(/[২]/g,'2')
-    .replace(/[৩]/g,'3').replace(/[৪]/g,'4').replace(/[৫]/g,'5')
-    .replace(/[৬]/g,'6').replace(/[৭]/g,'7').replace(/[৮]/g,'8')
-    .replace(/[৯]/g,'9');
-  return parseFloat(val);
+function toast(msg){
+  var t=g('toast');
+  t.textContent=msg;
+  t.style.display='block';
+  setTimeout(function(){t.style.display='none';},3000);
 }
 
-// Toast বার্তা (alert-এর বিকল্প)
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.display = 'block';
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.style.display='none', 3000);
+function num(id){
+  var v=g(id).value.trim();
+  // বাংলা সংখ্যা রূপান্তর
+  v=v.replace(/\u09E6/g,'0').replace(/\u09E7/g,'1').replace(/\u09E8/g,'2')
+     .replace(/\u09E9/g,'3').replace(/\u09EA/g,'4').replace(/\u09EB/g,'5')
+     .replace(/\u09EC/g,'6').replace(/\u09ED/g,'7').replace(/\u09EE/g,'8')
+     .replace(/\u09EF/g,'9').replace(/,/g,'');
+  return parseFloat(v)||0;
 }
 
-function switchTab(id) {
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  R('tab-'+id).classList.add('active');
-  const tabs = ['fr','mr','qr','rb','bp','cmp'];
-  document.querySelectorAll('.nav-tab')[tabs.indexOf(id)].classList.add('active');
+function valid(P,R,N){
+  if(!P||!R||!N){toast('\u26A0\uFE0F \u09B8\u09AC \u09A4\u09A5\u09CD\u09AF \u09AA\u09C2\u09B0\u09A3 \u0995\u09B0\u09C1\u09A8');return false;}
+  if(P<=0||R<=0||N<=0){toast('\u26A0\uFE0F \u09B6\u09C2\u09A8\u09CD\u09AF\u09B0 \u09AC\u09C7\u09B6\u09BF \u09AE\u09BE\u09A8 \u09A6\u09BF\u09A4\u09C7 \u09B9\u09AC\u09C7');return false;}
+  return true;
 }
 
-// ── টোটাল সারি ──────────────────────────────────────────────
-function totalRows(prin, int) {
-  const total = prin + int;
-  return `
-  <tr class="tfoot-total"><td>মোট</td><td>${fmtn(total)}</td><td>${fmtn(prin)}</td><td>${fmtn(int)}</td><td>—</td></tr>
-  <tr class="tfoot-prin"><td colspan="2" style="text-align:left;padding-left:10px">মোট আসল</td><td colspan="3">${fmtn(prin)} টাকা</td></tr>
-  <tr class="tfoot-int"><td colspan="2" style="text-align:left;padding-left:10px">মোট সুদ</td><td colspan="3">${fmtn(int)} টাকা</td></tr>
-  <tr class="tfoot-grand"><td colspan="2" style="text-align:left;padding-left:10px;font-weight:700">মোট পরিশোধ</td><td colspan="3" style="font-weight:700">${fmtn(total)} টাকা</td></tr>`;
+// ── টোটাল সারি ────────────────────────────────────────────
+function totRows(prin,intv){
+  var tot=prin+intv;
+  return '<tr class="ft"><td>\u09AE\u09CB\u099F</td><td>'+fmtn(tot)+'</td><td>'+fmtn(prin)+'</td><td>'+fmtn(intv)+'</td><td>\u2014</td></tr>'
+    +'<tr class="fp"><td colspan="2" style="text-align:left;padding-left:10px">\u09AE\u09CB\u099F \u0986\u09B8\u09B2</td><td colspan="3">'+fmtn(prin)+' \u099F\u09BE\u0995\u09BE</td></tr>'
+    +'<tr class="fi"><td colspan="2" style="text-align:left;padding-left:10px">\u09AE\u09CB\u099F \u09B8\u09C1\u09A6</td><td colspan="3">'+fmtn(intv)+' \u099F\u09BE\u0995\u09BE</td></tr>'
+    +'<tr class="fg"><td colspan="2" style="text-align:left;padding-left:10px;font-weight:700">\u09AE\u09CB\u099F \u09AA\u09B0\u09BF\u09B6\u09CB\u09A7</td><td colspan="3" style="font-weight:700">'+fmtn(tot)+' \u099F\u09BE\u0995\u09BE</td></tr>';
 }
 
-// ── EMI সূত্র (Monthly Rest) ──────────────────────────────────
-function emiCalc(P, r, n) {
-  // r = কার্যকর মাসিক হার (দশমিক)
-  if (r === 0) return P / n;
-  return P * r * Math.pow(1+r, n) / (Math.pow(1+r, n) - 1);
+// ── EMI সূত্র ──────────────────────────────────────────────
+function emi(P,r,n){
+  if(r===0)return P/n;
+  return P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
 }
 
-function buildEMISchedule(P, r, n, tbodyId) {
-  let bal = P, html = '', tPrin = 0, tInt = 0;
-  const emi = emiCalc(P, r, n);
-  for (let i = 1; i <= n; i++) {
-    const int = bal * r;
-    const prin = emi - int;
-    tInt += int; tPrin += prin;
-    bal -= prin;
-    html += `<tr><td>${i}</td><td>${fmtn(emi)}</td><td>${fmtn(prin)}</td><td>${fmtn(int)}</td><td>${fmtn(Math.max(0,bal))}</td></tr>`;
+function emiSched(P,r,n,tbId){
+  var e=emi(P,r,n),bal=P,html='',tp=0,ti=0;
+  for(var i=1;i<=n;i++){
+    var int=bal*r, prin=e-int;
+    ti+=int; tp+=prin; bal-=prin;
+    html+='<tr><td>'+i+'</td><td>'+fmtn(e)+'</td><td>'+fmtn(prin)+'</td><td>'+fmtn(int)+'</td><td>'+fmtn(Math.max(0,bal))+'</td></tr>';
   }
-  html += totalRows(tPrin, tInt);
-  R(tbodyId).innerHTML = html;
-  return { emi, tInt, tPay: P + tInt };
+  html+=totRows(tp,ti);
+  g(tbId).innerHTML=html;
+  return {emi:e,tInt:ti,tPay:P+ti};
 }
 
-// ── সমান হার ────────────────────────────────────────────────
-function calcFR() {
-  const P=toNum('fr-p'), rate=toNum('fr-r'), N=toNum('fr-n');
-  if(!P||!rate||!N){showToast('⚠️ সব তথ্য পূরণ করুন');return;}
-  const mi = P * rate/100/12;
-  const mp = P/N;
-  const monthly = mp+mi;
-  const tint = mi*N;
-  const tpay = P+tint;
-  const eff = (tint/P)*(12/N)*100;
-  R('fr-monthly').textContent=fmt(monthly);
-  R('fr-tint').textContent=fmt(tint);
-  R('fr-tpay').textContent=fmt(tpay);
-  R('fr-eff').textContent=eff.toFixed(2)+'%';
+var stored={}, chart=null;
+
+// ── Tab Switch ─────────────────────────────────────────────
+function sw(id){
+  var tabs=['fr','mr','qr','rb','bp','cm'];
+  for(var i=0;i<tabs.length;i++){
+    g('tab-'+tabs[i]).classList.remove('on');
+    g('nt-'+tabs[i]).classList.remove('on');
+  }
+  g('tab-'+id).classList.add('on');
+  g('nt-'+id).classList.add('on');
+}
+
+// ── Flat Rate ──────────────────────────────────────────────
+function doFR(){
+  var P=num('fr-p'),R=num('fr-r'),N=num('fr-n');
+  if(!valid(P,R,N))return;
+  var mi=P*R/100/12, mp=P/N, mo=mp+mi;
+  var ti=mi*N, tp=P+ti;
+  var apr=(ti/P)*(12/N)*100;
+  g('fr-m').textContent=fmt(mo);
+  g('fr-ti').textContent=fmt(ti);
+  g('fr-tp').textContent=fmt(tp);
+  g('fr-ap').textContent=apr.toFixed(2)+'%';
   show('fr-res');
-  let bal=P, html='';
-  for(let i=1;i<=N;i++){bal-=mp;html+=`<tr><td>${i}</td><td>${fmtn(monthly)}</td><td>${fmtn(mp)}</td><td>${fmtn(mi)}</td><td>${fmtn(Math.max(0,bal))}</td></tr>`;}
-  html += totalRows(P, tint);
-  R('fr-tbody').innerHTML=html;
-  show('fr-sched');
-  stored.fr={P,rate,N,monthly,tint,tpay};
+  var bal=P,html='';
+  for(var i=1;i<=N;i++){bal-=mp;html+='<tr><td>'+i+'</td><td>'+fmtn(mo)+'</td><td>'+fmtn(mp)+'</td><td>'+fmtn(mi)+'</td><td>'+fmtn(Math.max(0,bal))+'</td></tr>';}
+  html+=totRows(P,ti);
+  g('fr-tb').innerHTML=html;
+  show('fr-sc');
+  stored.fr={P:P,R:R,N:N,mo:mo,ti:ti,tp:tp};
 }
 
-// ── মাসিক রেস্ট (Monthly Rest) ──────────────────────────────
-function calcMR() {
-  const P=toNum('mr-p'), rate=toNum('mr-r'), N=toNum('mr-n');
-  if(!P||!rate||!N){showToast('⚠️ সব তথ্য পূরণ করুন');return;}
-  const r = rate/100/12;  // কার্যকর মাসিক হার
-  const apr = (Math.pow(1+r,12)-1)*100;  // প্রকৃত বার্ষিক হার
-  const {emi,tInt,tPay} = buildEMISchedule(P,r,N,'mr-tbody');
-  R('mr-emi').textContent=fmt(emi);
-  R('mr-mr').textContent=(r*100).toFixed(4)+'%';
-  R('mr-apr').textContent=apr.toFixed(2)+'%';
-  R('mr-tint').textContent=fmt(tInt);
-  R('mr-tpay').textContent=fmt(tPay);
-  show('mr-res'); show('mr-sched');
-  stored.mr={P,rate,N,emi,tInt,tPay,r,apr};
+// ── Monthly Rest ───────────────────────────────────────────
+function doMR(){
+  var P=num('mr-p'),R=num('mr-r'),N=num('mr-n');
+  if(!valid(P,R,N))return;
+  var r=R/100/12;
+  var apr=(Math.pow(1+r,12)-1)*100;
+  var res=emiSched(P,r,N,'mr-tb');
+  g('mr-e').textContent=fmt(res.emi);
+  g('mr-mr').textContent=(r*100).toFixed(4)+'%';
+  g('mr-ap').textContent=apr.toFixed(2)+'%';
+  g('mr-ti').textContent=fmt(res.tInt);
+  g('mr-tp').textContent=fmt(res.tPay);
+  show('mr-res'); show('mr-sc');
+  stored.mr={P:P,R:R,N:N,emi:res.emi,ti:res.tInt,tp:res.tPay,apr:apr};
 }
 
-// ── ত্রৈমাসিক রেস্ট (Quarterly Rest) ────────────────────────
-function calcQR() {
-  const P=toNum('qr-p'), rate=toNum('qr-r'), N=toNum('qr-n');
-  if(!P||!rate||!N){showToast('⚠️ সব তথ্য পূরণ করুন');return;}
-  const qRate = rate/100/4;  // ত্রৈমাসিক হার
-  const r = Math.pow(1+qRate, 1/3) - 1;  // কার্যকর মাসিক হার
-  const apr = (Math.pow(1+r,12)-1)*100;  // প্রকৃত বার্ষিক হার
-  const {emi,tInt,tPay} = buildEMISchedule(P,r,N,'qr-tbody');
-  R('qr-emi').textContent=fmt(emi);
-  R('qr-mr').textContent=(r*100).toFixed(4)+'%';
-  R('qr-apr').textContent=apr.toFixed(2)+'%';
-  R('qr-tint').textContent=fmt(tInt);
-  R('qr-tpay').textContent=fmt(tPay);
-  show('qr-res'); show('qr-sched');
-  stored.qr={P,rate,N,emi,tInt,tPay,r,apr};
+// ── Quarterly Rest ─────────────────────────────────────────
+function doQR(){
+  var P=num('qr-p'),R=num('qr-r'),N=num('qr-n');
+  if(!valid(P,R,N))return;
+  var qr=R/100/4, r=Math.pow(1+qr,1/3)-1;
+  var apr=(Math.pow(1+r,12)-1)*100;
+  var res=emiSched(P,r,N,'qr-tb');
+  g('qr-e').textContent=fmt(res.emi);
+  g('qr-mr').textContent=(r*100).toFixed(4)+'%';
+  g('qr-ap').textContent=apr.toFixed(2)+'%';
+  g('qr-ti').textContent=fmt(res.tInt);
+  g('qr-tp').textContent=fmt(res.tPay);
+  show('qr-res'); show('qr-sc');
+  stored.qr={P:P,R:R,N:N,emi:res.emi,ti:res.tInt,tp:res.tPay,apr:apr};
 }
 
-// ── ক্রমহ্রাসমান ─────────────────────────────────────────────
-function calcRB() {
-  const P=toNum('rb-p'), rate=toNum('rb-r'), N=toNum('rb-n');
-  if(!P||!rate||!N){showToast('⚠️ সব তথ্য পূরণ করুন');return;}
-  const mr=rate/100/12, mp=P/N;
-  let bal=P, tint=0, html='', first=0, last=0;
-  for(let i=1;i<=N;i++){
-    const int=bal*mr;
-    const pay=mp+int;
-    tint+=int; bal-=mp;
-    if(i===1)first=pay; if(i===N)last=pay;
-    html+=`<tr><td>${i}</td><td>${fmtn(pay)}</td><td>${fmtn(mp)}</td><td>${fmtn(int)}</td><td>${fmtn(Math.max(0,bal))}</td></tr>`;
+// ── Reducing Balance ───────────────────────────────────────
+function doRB(){
+  var P=num('rb-p'),R=num('rb-r'),N=num('rb-n');
+  if(!valid(P,R,N))return;
+  var mr=R/100/12, mp=P/N, bal=P, ti=0, html='', f=0, l=0;
+  for(var i=1;i<=N;i++){
+    var int=bal*mr, pay=mp+int;
+    ti+=int; bal-=mp;
+    if(i===1)f=pay; if(i===N)l=pay;
+    html+='<tr><td>'+i+'</td><td>'+fmtn(pay)+'</td><td>'+fmtn(mp)+'</td><td>'+fmtn(int)+'</td><td>'+fmtn(Math.max(0,bal))+'</td></tr>';
   }
-  const tpay=P+tint;
-  html+=totalRows(P,tint);
-  R('rb-first').textContent=fmt(first);
-  R('rb-last').textContent=fmt(last);
-  R('rb-tint').textContent=fmt(tint);
-  R('rb-tpay').textContent=fmt(tpay);
+  html+=totRows(P,ti);
+  g('rb-f').textContent=fmt(f);
+  g('rb-l').textContent=fmt(l);
+  g('rb-ti').textContent=fmt(ti);
+  g('rb-tp').textContent=fmt(P+ti);
   show('rb-res');
-  R('rb-tbody').innerHTML=html;
-  show('rb-sched');
-  stored.rb={P,rate,N,first,last,tint,tpay};
+  g('rb-tb').innerHTML=html;
+  show('rb-sc');
+  stored.rb={P:P,R:R,N:N,f:f,l:l,ti:ti,tp:P+ti};
 }
 
-// ── বুলেট ────────────────────────────────────────────────────
-function calcBP() {
-  const P=toNum('bp-p'), rate=toNum('bp-r'), N=toNum('bp-n');
-  if(!P||!rate||!N){showToast('⚠️ সব তথ্য পূরণ করুন');return;}
-  const mi=P*rate/100/12;
-  const final=P+mi;
-  const tint=mi*N;
-  const tpay=P+tint;
-  R('bp-monthly').textContent=fmt(mi);
-  R('bp-final').textContent=fmt(final);
-  R('bp-tint').textContent=fmt(tint);
-  R('bp-tpay').textContent=fmt(tpay);
+// ── Bullet ─────────────────────────────────────────────────
+function doBP(){
+  var P=num('bp-p'),R=num('bp-r'),N=num('bp-n');
+  if(!valid(P,R,N))return;
+  var mi=P*R/100/12, fi=P+mi, ti=mi*N, tp=P+ti;
+  g('bp-m').textContent=fmt(mi);
+  g('bp-fi').textContent=fmt(fi);
+  g('bp-ti').textContent=fmt(ti);
+  g('bp-tp').textContent=fmt(tp);
   show('bp-res');
-  let html='';
-  for(let i=1;i<=N;i++){
-    const isLast=i===N;
-    html+=`<tr><td>${i}</td><td>${fmtn(isLast?final:mi)}</td><td>${fmtn(isLast?P:0)}</td><td>${fmtn(mi)}</td><td>${fmtn(isLast?0:P)}</td></tr>`;
+  var html='';
+  for(var i=1;i<=N;i++){
+    var last=i===N;
+    html+='<tr><td>'+i+'</td><td>'+fmtn(last?fi:mi)+'</td><td>'+fmtn(last?P:0)+'</td><td>'+fmtn(mi)+'</td><td>'+fmtn(last?0:P)+'</td></tr>';
   }
-  html+=totalRows(P,tint);
-  R('bp-tbody').innerHTML=html;
-  show('bp-sched');
-  stored.bp={P,rate,N,mi,final,tint,tpay};
+  html+=totRows(P,ti);
+  g('bp-tb').innerHTML=html;
+  show('bp-sc');
+  stored.bp={P:P,R:R,N:N,mi:mi,fi:fi,ti:ti,tp:tp};
 }
 
-// ── তুলনা ────────────────────────────────────────────────────
-function calcCMP() {
-  const P=toNum('cmp-p'), rate=toNum('cmp-r'), N=toNum('cmp-n');
-  if(!P||!rate||!N){showToast('⚠️ সব তথ্য পূরণ করুন');return;}
-
-  // Flat Rate
-  const frMI=P*rate/100/12, frMonthly=P/N+frMI, frTint=frMI*N, frTpay=P+frTint;
-
-  // Monthly Rest
-  const mrR=rate/100/12;
-  const mrEMI=emiCalc(P,mrR,N), mrTpay=mrEMI*N, mrTint=mrTpay-P;
-
-  // Quarterly Rest
-  const qRate=rate/100/4, qrR=Math.pow(1+qRate,1/3)-1;
-  const qrEMI=emiCalc(P,qrR,N), qrTpay=qrEMI*N, qrTint=qrTpay-P;
-
-  // Reducing Balance
-  let rbBal=P, rbTint=0, rbFirst=0;
-  const rbMR=rate/100/12, rbMP=P/N;
-  for(let i=1;i<=N;i++){const int=rbBal*rbMR;rbTint+=int;if(i===1)rbFirst=rbMP+int;rbBal-=rbMP;}
-  const rbTpay=P+rbTint;
-
-  // Bullet
-  const bpMI=P*rate/100/12, bpTint=bpMI*N, bpTpay=P+bpTint;
-
-  const ints=[frTint,mrTint,qrTint,rbTint,bpTint];
-  const minInt=Math.min(...ints);
-
-  if(cmpChart)cmpChart.destroy();
-  cmpChart=new Chart(R('cmp-chart'),{
+// ── Compare ────────────────────────────────────────────────
+function doCM(){
+  var P=num('cm-p'),R=num('cm-r'),N=num('cm-n');
+  if(!valid(P,R,N))return;
+  var frTi=P*R/100/12*N;
+  var mrR=R/100/12, mrE=emi(P,mrR,N), mrTi=mrE*N-P;
+  var qrR=Math.pow(1+R/100/4,1/3)-1, qrE=emi(P,qrR,N), qrTi=qrE*N-P;
+  var rbBal=P,rbTi=0,rbF=0; var rbMR=R/100/12,rbMP=P/N;
+  for(var i=1;i<=N;i++){var int=rbBal*rbMR;rbTi+=int;if(i===1)rbF=rbMP+int;rbBal-=rbMP;}
+  var bpTi=P*R/100/12*N;
+  var ints=[frTi,mrTi,qrTi,rbTi,bpTi];
+  var mn=Math.min.apply(null,ints);
+  if(chart)chart.destroy();
+  chart=new Chart(g('cm-chart'),{
     type:'bar',
     data:{
-      labels:['সমান হার','মাসিক রেস্ট','ত্রৈমাসিক রেস্ট','ক্রমহ্রাসমান','বুলেট'],
-      datasets:[{
-        label:'মোট সুদ',
-        data:ints,
-        backgroundColor:['#EF9A9A','#90CAF9','#B39DDB','#A5D6A7','#FFCC80'],
-        borderColor:['#E53935','#1E88E5','#7B1FA2','#43A047','#FB8C00'],
-        borderWidth:2, borderRadius:8
-      }]
+      labels:['\u09B8\u09AE\u09BE\u09A8 \u09B9\u09BE\u09B0','\u09AE\u09BE\u09B8\u09BF\u0995 \u09B0\u09C7\u09B8\u09CD\u099F','\u09A4\u09CD\u09B0\u09C8\u09AE\u09BE\u09B8\u09BF\u0995 \u09B0\u09C7\u09B8\u09CD\u099F','\u0995\u09CD\u09B0\u09AE\u09B9\u09CD\u09B0\u09BE\u09B8\u09AE\u09BE\u09A8','\u09AC\u09C1\u09B2\u09C7\u099F'],
+      datasets:[{label:'\u09AE\u09CB\u099F \u09B8\u09C1\u09A6',data:ints,backgroundColor:['#EF9A9A','#90CAF9','#CE93D8','#A5D6A7','#FFCC80'],borderColor:['#E53935','#1E88E5','#8E24AA','#43A047','#FB8C00'],borderWidth:2,borderRadius:8}]
     },
-    options:{
-      responsive:true,
-      plugins:{legend:{display:false}},
-      scales:{y:{beginAtZero:true,ticks:{callback:v=>'৳'+v.toLocaleString()}}}
-    }
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:function(v){return '\u09F3'+v.toLocaleString();}}}}}
   });
-
-  const methods=[
-    {name:'সমান হার',badge:'b-red',inst:fmt(frMonthly)+' (সমান)',tint:frTint,tpay:frTpay},
-    {name:'মাসিক রেস্ট',badge:'b-blue',inst:fmt(mrEMI)+' (সমান EMI)',tint:mrTint,tpay:mrTpay},
-    {name:'ত্রৈমাসিক রেস্ট',badge:'b-purple',inst:fmt(qrEMI)+' (সমান EMI)',tint:qrTint,tpay:qrTpay},
-    {name:'ক্রমহ্রাসমান',badge:'b-green',inst:fmt(rbFirst)+' থেকে কমে',tint:rbTint,tpay:rbTpay},
-    {name:'বুলেট',badge:'b-orange',inst:fmt(bpMI)+' + শেষে আসল',tint:bpTint,tpay:bpTpay},
+  var ms=[
+    {nm:'\u09B8\u09AE\u09BE\u09A8 \u09B9\u09BE\u09B0',bc:'br',inst:fmt(P/N+P*R/100/12)+' (\u09B8\u09AE\u09BE\u09A8)',ti:frTi,tp:P+frTi},
+    {nm:'\u09AE\u09BE\u09B8\u09BF\u0995 \u09B0\u09C7\u09B8\u09CD\u099F',bc:'bb',inst:fmt(mrE)+' (EMI)',ti:mrTi,tp:P+mrTi},
+    {nm:'\u09A4\u09CD\u09B0\u09C8\u09AE\u09BE\u09B8\u09BF\u0995 \u09B0\u09C7\u09B8\u09CD\u099F',bc:'bpu',inst:fmt(qrE)+' (EMI)',ti:qrTi,tp:P+qrTi},
+    {nm:'\u0995\u09CD\u09B0\u09AE\u09B9\u09CD\u09B0\u09BE\u09B8\u09AE\u09BE\u09A8',bc:'bg',inst:fmt(rbF)+' \u09A5\u09C7\u0995\u09C7 \u0995\u09AE\u09C7',ti:rbTi,tp:P+rbTi},
+    {nm:'\u09AC\u09C1\u09B2\u09C7\u099F',bc:'bo',inst:fmt(P*R/100/12)+' + \u09B6\u09C7\u09B7\u09C7 \u0986\u09B8\u09B2',ti:bpTi,tp:P+bpTi}
   ];
-
-  R('cmp-detail').innerHTML=methods.map(m=>`
-    <div class="cmp-row">
-      <div class="cmp-title">
-        <span class="badge ${m.badge}">${m.name}</span>
-        ${m.tint===minInt?'<span class="winner">✅ সবচেয়ে কম সুদ</span>':''}
-      </div>
-      <div class="cmp-meta">
-        <div class="cmp-meta-item">কিস্তি: <strong>${m.inst}</strong></div>
-        <div class="cmp-meta-item">মোট সুদ: <strong>${fmt(m.tint)}</strong></div>
-        <div class="cmp-meta-item">মোট পরিশোধ: <strong>${fmt(m.tpay)}</strong></div>
-      </div>
-    </div>`).join('');
-
-  show('cmp-res');
-  stored.cmp={P,rate,N,methods,frMonthly,mrEMI,qrEMI,rbFirst,bpMI};
+  var html='';
+  for(var i=0;i<ms.length;i++){
+    var m=ms[i];
+    html+='<div class="cr"><div class="ct"><span class="badge '+m.bc+'">'+m.nm+'</span>'+(m.ti===mn?'<span class="win">\u2705 \u09B8\u09AC\u099A\u09C7\u09AF\u09BC\u09C7 \u0995\u09AE \u09B8\u09C1\u09A6</span>':'')+'</div><div class="cm"><div class="ci">\u0995\u09BF\u09B8\u09CD\u09A4\u09BF: <strong>'+m.inst+'</strong></div><div class="ci">\u09AE\u09CB\u099F \u09B8\u09C1\u09A6: <strong>'+fmt(m.ti)+'</strong></div><div class="ci">\u09AE\u09CB\u099F \u09AA\u09B0\u09BF\u09B6\u09CB\u09A7: <strong>'+fmt(m.tp)+'</strong></div></div></div>';
+  }
+  g('cm-det').innerHTML=html;
+  show('cm-res');
+  stored.cm={P:P,R:R,N:N,ms:ms};
 }
 
-// ── শেয়ার ────────────────────────────────────────────────────
-function buildText(type) {
-  const s=stored[type];
-  if(!s)return null;
-  let t='📊 কিস্তি ক্যালকুলেটর রিপোর্ট\n';
-  t+=`━━━━━━━━━━━━━━━━━━\n`;
-  t+=`ঋণ: ৳${s.P.toLocaleString()} | হার: ${s.rate}% | মেয়াদ: ${s.N} মাস\n`;
-  t+=`━━━━━━━━━━━━━━━━━━\n`;
-  if(type==='fr'){
-    t+=`পদ্ধতি: সমান হার\nমাসিক কিস্তি : ৳${Math.round(s.monthly).toLocaleString()}\nমোট সুদ      : ৳${Math.round(s.tint).toLocaleString()}\nমোট পরিশোধ  : ৳${Math.round(s.tpay).toLocaleString()}\n`;
-  } else if(type==='mr'){
-    t+=`পদ্ধতি: মাসিক রেস্ট (চক্রবৃদ্ধি)\nমাসিক EMI    : ৳${Math.round(s.emi).toLocaleString()}\nকার্যকর APR  : ${s.apr.toFixed(2)}%\nমোট সুদ      : ৳${Math.round(s.tInt).toLocaleString()}\nমোট পরিশোধ  : ৳${Math.round(s.tPay).toLocaleString()}\n`;
-  } else if(type==='qr'){
-    t+=`পদ্ধতি: ত্রৈমাসিক রেস্ট (চক্রবৃদ্ধি)\nমাসিক EMI    : ৳${Math.round(s.emi).toLocaleString()}\nকার্যকর APR  : ${s.apr.toFixed(2)}%\nমোট সুদ      : ৳${Math.round(s.tInt).toLocaleString()}\nমোট পরিশোধ  : ৳${Math.round(s.tPay).toLocaleString()}\n`;
-  } else if(type==='rb'){
-    t+=`পদ্ধতি: ক্রমহ্রাসমান\n১ম কিস্তি   : ৳${Math.round(s.first).toLocaleString()}\nশেষ কিস্তি  : ৳${Math.round(s.last).toLocaleString()}\nমোট সুদ     : ৳${Math.round(s.tint).toLocaleString()}\nমোট পরিশোধ : ৳${Math.round(s.tpay).toLocaleString()}\n`;
-  } else if(type==='bp'){
-    t+=`পদ্ধতি: বুলেট পেমেন্ট\nমাসিক সুদ   : ৳${Math.round(s.mi).toLocaleString()}\nশেষে পরিশোধ : ৳${Math.round(s.final).toLocaleString()}\nমোট সুদ     : ৳${Math.round(s.tint).toLocaleString()}\nমোট
+// ── Share ──────────────────────────────────────────────────
+function share(type){
+  var s=stored[type], t='';
+  if(!s){toast('\u26A0\uFE0F \u0986\u0997\u09C7 \u09B9\u09BF\u09B8\u09BE\u09AC \u0995\u09B0\u09C1\u09A8');return;}
+  t='\uD83D\uDCCA \u0995\u09BF\u09B8\u09CD\u09A4\u09BF \u0995\u09CD\u09AF\u09BE\u09B2\u0995\u09C1\u09B2\u09C7\u099F\u09B0 \u09B0\u09BF\u09AA\u09CB\u09B0\u09CD\u099F\n';
+  t+='\u09CB\u09BC\u09CB\u09BC\u09CB\u09BC\u09CB\u09BC\u09CB\u09BC\u09CB\u09BC\u09CB\u09BC\u09CB\u09BC\u09CB\u09BC\n';
+  t+='\u098B\u09A3: \u09F3'+s.P.toLocaleString()+' | \u09B9\u09BE\u09B0: '+s.R+'% | \u09AE\u09C7\u09AF\u09BC\u09BE\u09A6: '+s.N+' \u09AE\u09BE\u09B8\n';
+  t+='\u09CB\u09BC\u09CB\u09BC\u09CB\u09BC\u09CB\u09BC\u09CB\u09BC\u09CB\u09BC\u09CB\u09BC\u09CB\u09BC\u09CB\u09BC\n';
+  if(type==='fr') t+='\u09AA\u09A6\u09CD\u09A7\u09A4\u09BF: \u09B8\u09AE\u09BE\u09A8 \u09B9\u09BE\u09B0\n\u09AE\u09BE\u09B8\u09BF\u0995 \u0995\u09BF\u09B8\u09CD\u09A4\u09BF : \u09F3'+Math.round(s.mo).toLocaleString()+'\n\u09AE\u09CB\u099F \u09B8\u09C1\u09A6   : \u09F3'+Math.round(s.ti).toLocaleString()+'\n\u09AE\u09CB\u099F \u09AA\u09B0\u09BF\u09B6\u09CB\u09A7 : \u09F3'+Math.round(s.tp).toLocaleString()+'\n';
+  else if(type==='mr') t+='\u09AA\u09A6\u09CD\u09A7\u09A4\u09BF: \u09AE\u09BE\u09B8\u09BF\u0995 \u09B0\u09C7\u09B8\u09CD\u099F\n\u09AE\u09BE\u09B8\u09BF\u0995 EMI : \u09F3'+Math.round(s.emi).toLocaleString()+'\n\u0995\u09BE\u09B0\u09CD\u09AF\u0995\u09B0 APR: '+s.apr.toFixed(2)+'%\n\u09AE\u09CB\u099F \u09B8\u09C1\u09A6  : \u09F3'+Math.round(s.ti).toLocaleString()+'\n\u09AE\u09CB\u099F \u09AA\u09B0\u09BF\u09B6\u09CB\u09A7: \u09F3'+Math.round(s.tp).toLocaleString()+'\n';
+  else if(type==='qr') t+='\u09AA\u09A6\u09CD\u09A7\u09A4\u09BF: \u09A4\u09CD\u09B0\u09C8\u09AE\u09BE\u09B8\u09BF\u0995 \u09B0\u09C7\u09B8\u09CD\u099F\n\u09AE\u09BE\u09B8\u09BF\u0995 EMI : \u09F3'+Math.round(s.emi).toLocaleString()+'\n\u0995\u09BE\u09B0\u09CD\u09AF\u0995\u09B0 APR: '+s.apr.toFixed(2)+'%\n\u09AE\u09CB\u099F \u09B8\u09C1\u09A6  : \u09F3'+Math.round(s.ti).toLocaleString()+'\n\u09AE\u09CB\u099F \u09AA\u09B0\u09BF\u09B6\u09CB\u09A7: \u09F3'+Math.round(s.tp).toLocaleString()+'\n';
+  else if(type==='rb') t+='\u09AA\u09A6\u09CD\u09A7\u09A4\u09BF: \u0995\u09CD\u09B0\u09AE\u09B9\u09CD\u09B0\u09BE\u09B8\u09AE\u09BE\u09A8\n\u09E7\u09AE \u0995\u09BF\u09B8\u09CD\u09A4\u09BF : \u09F3'+Math.round(s.f).toLocaleString()+'\n\u09B6\u09C7\u09B7 \u0995\u09BF\u09B8\u09CD\u09A4\u09BF : \u09F3'+Math.round(s.l).toLocaleString()+'\n\u09AE\u09CB\u099F \u09B8\u09C1\u09A6  : \u09F3'+Math.round(s.ti).toLocaleString()+'\n\u09AE\u09CB\u099F \u09AA\u09B0\u09BF\u09B6\u09CB\u09A7: \u09F3'+Math.round(s.tp).toLocaleString()+'\n';
+  else if(type==='bp') t+='\u09AA\u09A6\u09CD\u09A7\u09A4\u09BF: \u09AC\u09C1\u09B2\u09C7\u099F\n\u09AE\u09BE\u09B8\u09BF\u0995 \u09B8\u09C1\u09A6 : \u09F3'+Math.round(s.mi).toLocaleString()+'\n\u09B6\u09C7\u09B7\u09C7 \u09AA\u09B0\u09BF\u09B6\u09CB\u09A7: \u09F3'+Math.round(s.fi).toLocaleString()+'\n\u09AE\u09CB\u099F \u09B8\u09C1\u09A6  : \u09F3'+Math.round(s.ti).toLocaleString()+'\n\u09AE\u09CB\u099F \u09AA\u09B0\u09BF\u09B6\u09CB\u09A7: \u09F3'+Math.round(s.tp).toLocaleString()+'\n';
+  else if(type==='cm'&&s.ms){for(var i=0;i<s.ms.length;i++){var m=s.ms[i];t+=m.nm+' \u2192 \u09B8\u09C1\u09A6: '+fmt(m.ti)+'\n';}}
+  if(typeof Android!=='undefined'&&Android.shareText){Android.shareText(t);}
+  else if(navigator.share){navigator.share({title:'\u0995\u09BF\u09B8\u09CD\u09A4\u09BF \u0995\u09CD\u09AF\u09BE\u09B2\u0995\u09C1\u09B2\u09C7\u099F\u09B0',text:t});}
+  else{try{var el=document.createElement('textarea');el.value=t;el.style.position='fixed';el.style.opacity='0';document.body.appendChild(el);el.focus();el.select();document.execCommand('copy');document.body.removeChild(el);toast('\u2705 \u0995\u09AA\u09BF \u09B9\u09AF\u09BC\u09C7\u099B\u09C7!');}catch(e){}}
+}
+
+// ── Event Listeners (onclick fallback) ─────────────────────
+window.onload=function(){
+  g('btn-fr').addEventListener('click',doFR);
+  g('btn-mr').addEventListener('click',doMR);
+  g('btn-qr').addEventListener('click',doQR);
+  g('btn-rb').addEventListener('click',doRB);
+  g('btn-bp').addEventListener('click',doBP);
+  g('btn-cm').addEventListener('click',doCM);
+  g('sh-fr').addEventListener('click',function(){share('fr');});
+  g('sh-mr').addEventListener('click',function(){share('mr');});
+  g('sh-qr').addEventListener('click',function(){share('qr');});
+  g('sh-rb').addEventListener('click',function(){share('rb');});
+  g('sh-bp').addEventListener('click',function(){share('bp');});
+  g('sh-cm').addEventListener('click',function(){share('cm');});
+};
+</script>
+</body>
+</html>
