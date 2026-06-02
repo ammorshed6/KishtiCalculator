@@ -29,6 +29,8 @@ body{font-family:'Noto Sans Bengali','Hind Siliguri',sans-serif;background:var(-
 .grace-toggle{display:flex;gap:8px;margin-bottom:10px;}
 .gbtn{flex:1;padding:9px;border:2px solid var(--grace-b);border-radius:8px;background:#fff;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;color:#795548;}
 .gbtn.on{background:#FF8F00;color:#fff;border-color:#FF8F00;}
+.grace-toggle{flex-wrap:wrap;}
+.grace-toggle .gbtn{font-size:11px;padding:7px 6px;}
 .btn{width:100%;padding:13px;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;background:var(--p);color:#fff;margin-top:4px;}
 .btn2{background:var(--pl);color:var(--p);margin-top:12px;}
 .rgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
@@ -97,7 +99,8 @@ tr.grace-row td:first-child{font-weight:700;color:#FF8F00;}
       <div class="grace-toggle">
         <button class="gbtn on" id="fr-gt1" onclick="setGrace('fr','none')">গ্রেস নেই</button>
         <button class="gbtn" id="fr-gt2" onclick="setGrace('fr','free')">সুদমুক্ত</button>
-        <button class="gbtn" id="fr-gt3" onclick="setGrace('fr','paid')">সুদসহ</button>
+        <button class="gbtn" id="fr-gt3" onclick="setGrace('fr','paid')">সুদ পরিশোধ</button>
+        <button class="gbtn" id="fr-gt4" onclick="setGrace('fr','cap')">সুদ আসলে যোগ</button>
       </div>
       <div class="igrp hidden" id="fr-gm-wrap"><label>গ্রেস পিরিয়ড (মাস)</label><input type="text" inputmode="numeric" id="fr-gm" placeholder="যেমন: 3"></div>
     </div>
@@ -119,6 +122,12 @@ tr.grace-row td:first-child{font-weight:700;color:#FF8F00;}
     <div class="twrap"><table><thead><tr><th>মাস</th><th>কিস্তি</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead><tbody id="fr-tb"></tbody></table></div>
   </div>
 </div>
+  <div class="card hidden" id="fr-cap-sc">
+    <div class="ctitle" style="color:#E65100">📌 সুদ আসলে যোগ হলে যা হবে</div>
+    <div id="fr-cap-info" style="background:#FFF3E0;border:1px solid #FF8F00;border-radius:8px;padding:10px;margin-bottom:10px;font-size:12px;color:#5D4037"></div>
+    <div class="twrap"><table><thead><tr><th>মাস</th><th>কিস্তি</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead><tbody id="fr-cap-tb"></tbody></table></div>
+  </div>
+
 
 <!-- MONTHLY REST -->
 <div class="tab" id="tab-mr">
@@ -136,7 +145,8 @@ tr.grace-row td:first-child{font-weight:700;color:#FF8F00;}
       <div class="grace-toggle">
         <button class="gbtn on" id="mr-gt1" onclick="setGrace('mr','none')">গ্রেস নেই</button>
         <button class="gbtn" id="mr-gt2" onclick="setGrace('mr','free')">সুদমুক্ত</button>
-        <button class="gbtn" id="mr-gt3" onclick="setGrace('mr','paid')">সুদসহ</button>
+        <button class="gbtn" id="mr-gt3" onclick="setGrace('mr','paid')">সুদ পরিশোধ</button>
+        <button class="gbtn" id="mr-gt4" onclick="setGrace('mr','cap')">সুদ আসলে যোগ</button>
       </div>
       <div class="igrp hidden" id="mr-gm-wrap"><label>গ্রেস পিরিয়ড (মাস)</label><input type="text" inputmode="numeric" id="mr-gm" placeholder="যেমন: 3"></div>
     </div>
@@ -159,6 +169,12 @@ tr.grace-row td:first-child{font-weight:700;color:#FF8F00;}
     <div class="twrap"><table><thead><tr><th>মাস</th><th>EMI</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead><tbody id="mr-tb"></tbody></table></div>
   </div>
 </div>
+  <div class="card hidden" id="mr-cap-sc">
+    <div class="ctitle" style="color:#E65100">📌 সুদ আসলে যোগ হলে যা হবে</div>
+    <div id="mr-cap-info" style="background:#FFF3E0;border:1px solid #FF8F00;border-radius:8px;padding:10px;margin-bottom:10px;font-size:12px;color:#5D4037"></div>
+    <div class="twrap"><table><thead><tr><th>মাস</th><th>EMI</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead><tbody id="mr-cap-tb"></tbody></table></div>
+  </div>
+
 
 <!-- QUARTERLY REST -->
 <div class="tab" id="tab-qr">
@@ -176,7 +192,8 @@ tr.grace-row td:first-child{font-weight:700;color:#FF8F00;}
       <div class="grace-toggle">
         <button class="gbtn on" id="qr-gt1" onclick="setGrace('qr','none')">গ্রেস নেই</button>
         <button class="gbtn" id="qr-gt2" onclick="setGrace('qr','free')">সুদমুক্ত</button>
-        <button class="gbtn" id="qr-gt3" onclick="setGrace('qr','paid')">সুদসহ</button>
+        <button class="gbtn" id="qr-gt3" onclick="setGrace('qr','paid')">সুদ পরিশোধ</button>
+        <button class="gbtn" id="qr-gt4" onclick="setGrace('qr','cap')">সুদ আসলে যোগ</button>
       </div>
       <div class="igrp hidden" id="qr-gm-wrap"><label>গ্রেস পিরিয়ড (মাস)</label><input type="text" inputmode="numeric" id="qr-gm" placeholder="যেমন: 3"></div>
     </div>
@@ -199,6 +216,12 @@ tr.grace-row td:first-child{font-weight:700;color:#FF8F00;}
     <div class="twrap"><table><thead><tr><th>মাস</th><th>EMI</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead><tbody id="qr-tb"></tbody></table></div>
   </div>
 </div>
+  <div class="card hidden" id="qr-cap-sc">
+    <div class="ctitle" style="color:#E65100">📌 সুদ আসলে যোগ হলে যা হবে</div>
+    <div id="qr-cap-info" style="background:#FFF3E0;border:1px solid #FF8F00;border-radius:8px;padding:10px;margin-bottom:10px;font-size:12px;color:#5D4037"></div>
+    <div class="twrap"><table><thead><tr><th>মাস</th><th>EMI</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead><tbody id="qr-cap-tb"></tbody></table></div>
+  </div>
+
 
 <!-- REDUCING BALANCE -->
 <div class="tab" id="tab-rb">
@@ -215,7 +238,8 @@ tr.grace-row td:first-child{font-weight:700;color:#FF8F00;}
       <div class="grace-toggle">
         <button class="gbtn on" id="rb-gt1" onclick="setGrace('rb','none')">গ্রেস নেই</button>
         <button class="gbtn" id="rb-gt2" onclick="setGrace('rb','free')">সুদমুক্ত</button>
-        <button class="gbtn" id="rb-gt3" onclick="setGrace('rb','paid')">সুদসহ</button>
+        <button class="gbtn" id="rb-gt3" onclick="setGrace('rb','paid')">সুদ পরিশোধ</button>
+        <button class="gbtn" id="rb-gt4" onclick="setGrace('rb','cap')">সুদ আসলে যোগ</button>
       </div>
       <div class="igrp hidden" id="rb-gm-wrap"><label>গ্রেস পিরিয়ড (মাস)</label><input type="text" inputmode="numeric" id="rb-gm" placeholder="যেমন: 3"></div>
     </div>
@@ -237,6 +261,12 @@ tr.grace-row td:first-child{font-weight:700;color:#FF8F00;}
     <div class="twrap"><table><thead><tr><th>মাস</th><th>কিস্তি</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead><tbody id="rb-tb"></tbody></table></div>
   </div>
 </div>
+  <div class="card hidden" id="rb-cap-sc">
+    <div class="ctitle" style="color:#E65100">📌 সুদ আসলে যোগ হলে যা হবে</div>
+    <div id="rb-cap-info" style="background:#FFF3E0;border:1px solid #FF8F00;border-radius:8px;padding:10px;margin-bottom:10px;font-size:12px;color:#5D4037"></div>
+    <div class="twrap"><table><thead><tr><th>মাস</th><th>কিস্তি</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead><tbody id="rb-cap-tb"></tbody></table></div>
+  </div>
+
 
 <!-- BULLET -->
 <div class="tab" id="tab-bp">
@@ -253,7 +283,8 @@ tr.grace-row td:first-child{font-weight:700;color:#FF8F00;}
       <div class="grace-toggle">
         <button class="gbtn on" id="bp-gt1" onclick="setGrace('bp','none')">গ্রেস নেই</button>
         <button class="gbtn" id="bp-gt2" onclick="setGrace('bp','free')">সুদমুক্ত</button>
-        <button class="gbtn" id="bp-gt3" onclick="setGrace('bp','paid')">সুদসহ</button>
+        <button class="gbtn" id="bp-gt3" onclick="setGrace('bp','paid')">সুদ পরিশোধ</button>
+        <button class="gbtn" id="bp-gt4" onclick="setGrace('bp','cap')">সুদ আসলে যোগ</button>
       </div>
       <div class="igrp hidden" id="bp-gm-wrap"><label>গ্রেস পিরিয়ড (মাস)</label><input type="text" inputmode="numeric" id="bp-gm" placeholder="যেমন: 3"></div>
     </div>
@@ -275,6 +306,12 @@ tr.grace-row td:first-child{font-weight:700;color:#FF8F00;}
     <div class="twrap"><table><thead><tr><th>মাস</th><th>পেমেন্ট</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead><tbody id="bp-tb"></tbody></table></div>
   </div>
 </div>
+  <div class="card hidden" id="bp-cap-sc">
+    <div class="ctitle" style="color:#E65100">📌 সুদ আসলে যোগ হলে যা হবে</div>
+    <div id="bp-cap-info" style="background:#FFF3E0;border:1px solid #FF8F00;border-radius:8px;padding:10px;margin-bottom:10px;font-size:12px;color:#5D4037"></div>
+    <div class="twrap"><table><thead><tr><th>মাস</th><th>পেমেন্ট</th><th>আসল</th><th>সুদ</th><th>বাকি</th></tr></thead><tbody id="bp-cap-tb"></tbody></table></div>
+  </div>
+
 
 <!-- COMPARE -->
 <div class="tab" id="tab-cm">
@@ -291,7 +328,8 @@ tr.grace-row td:first-child{font-weight:700;color:#FF8F00;}
       <div class="grace-toggle">
         <button class="gbtn on" id="cm-gt1" onclick="setGrace('cm','none')">গ্রেস নেই</button>
         <button class="gbtn" id="cm-gt2" onclick="setGrace('cm','free')">সুদমুক্ত</button>
-        <button class="gbtn" id="cm-gt3" onclick="setGrace('cm','paid')">সুদসহ</button>
+        <button class="gbtn" id="cm-gt3" onclick="setGrace('cm','paid')">সুদ পরিশোধ</button>
+        <button class="gbtn" id="cm-gt4" onclick="setGrace('cm','cap')">সুদ আসলে যোগ</button>
       </div>
       <div class="igrp hidden" id="cm-gm-wrap"><label>গ্রেস পিরিয়ড (মাস)</label><input type="text" inputmode="numeric" id="cm-gm" placeholder="যেমন: 3"></div>
     </div>
@@ -339,6 +377,7 @@ function setGrace(id,type){
   g(id+'-gt1').className='gbtn'+(type==='none'?' on':'');
   g(id+'-gt2').className='gbtn'+(type==='free'?' on':'');
   g(id+'-gt3').className='gbtn'+(type==='paid'?' on':'');
+  g(id+'-gt4').className='gbtn'+(type==='cap'?' on':'');
   if(type==='none')hide(id+'-gm-wrap'); else show(id+'-gm-wrap');
 }
 
@@ -369,17 +408,71 @@ function totRows(prin,intv){
 }
 
 // গ্রেস সারি তৈরি
-function graceRows(gm,gPay,gInt,P,gType){
+function graceRows(gm,gPay,gInt,P,gType,r){
   var html='';
-  var label=gType==='free'?'\u09B8\u09C1\u09A6\u09AE\u09C1\u0995\u09CD\u09A4':'\u09B8\u09C1\u09A6\u09B8\u09B9';
+  var label={'free':'\u09B8\u09C1\u09A6\u09AE\u09C1\u0995\u09CD\u09A4','paid':'\u09B8\u09C1\u09A6 \u09AA\u09B0\u09BF\u09B6\u09CB\u09A7','cap':'\u09B8\u09C1\u09A6 \u09AF\u09CB\u0997'}[gType]||'';
+  var bal=P;
   for(var i=1;i<=gm;i++){
+    var iAmt=gType==='cap'?(bal*(r||P*0.01/12)):gInt;
+    var bAmt=gType==='cap'?(bal+iAmt):P;
     html+='<tr class="grace-row"><td>\u0997\u09CD\u09B0\u09C7\u09B8-'+i+' ('+label+')</td>'
-      +'<td>'+fmtn(gPay)+'</td>'
-      +'<td>'+fmtn(0)+'</td>'
-      +'<td>'+fmtn(gInt)+'</td>'
-      +'<td>'+fmtn(P)+'</td></tr>';
+      +'<td>'+fmtn(gType==='cap'?0:gPay)+'</td>'
+      +'<td>0</td>'
+      +'<td>'+fmtn(iAmt)+'</td>'
+      +'<td>'+fmtn(Math.round(bAmt))+'</td></tr>';
+    if(gType==='cap') bal=bAmt;
   }
   return html;
+}
+
+// পুঁজিকৃত সুদের শিডিউল
+function capSched(P,r,n,gm,tbId,infoId,method){
+  var newP,capInt;
+  if(method==='flat'){
+    var mi=P*(r*12)/12; // r এখানে monthly rate
+    capInt=mi*gm;
+    newP=P+capInt;
+  } else {
+    // compound: new P = P*(1+r)^gm
+    newP=P*Math.pow(1+r,gm);
+    capInt=newP-P;
+  }
+  // info box
+  g(infoId).innerHTML='<strong>\u09AE\u09C2ল \u098B\u09A3:</strong> \u09F3'+Math.round(P).toLocaleString()
+    +'<br><strong>\u09AF\u09CB\u0997 \u09B8\u09C1\u09A6 ('+gm+'\u09AEাস):</strong> \u09F3'+Math.round(capInt).toLocaleString()
+    +'<br><strong>\u09A8\u09A4\u09C1\u09A8 \u0986\u09B8\u09B2:</strong> \u09F3'+Math.round(newP).toLocaleString();
+
+  // grace rows showing growing balance
+  var html='',bal=newP;
+  // cap grace rows (shown in cap table as 0-payment rows)
+  var balG=P,r2=r;
+  for(var i=1;i<=gm;i++){
+    var iAmt=method==='flat'?(P*(r*12)/12):balG*r;
+    balG+=iAmt;
+    html+='<tr class="grace-row"><td>\u0997\u09CD\u09B0\u09C7\u09B8-'+i+'</td><td>0</td><td>0</td><td>'+fmtn(Math.round(iAmt))+'</td><td>'+fmtn(Math.round(balG))+'</td></tr>';
+  }
+
+  // post-grace schedule
+  var tp=0,ti=0;
+  if(method==='flat'){
+    var mp2=newP/n, mi2=newP*(r*12)/12, mo2=mp2+mi2;
+    var bal2=newP;
+    for(var i=1;i<=n;i++){
+      bal2-=mp2;
+      html+='<tr><td>'+(gm+i)+'</td><td>'+fmtn(mo2)+'</td><td>'+fmtn(mp2)+'</td><td>'+fmtn(mi2)+'</td><td>'+fmtn(Math.max(0,bal2))+'</td></tr>';
+      tp+=mp2; ti+=mi2;
+    }
+  } else {
+    var e2=emi(newP,r,n);
+    for(var i=1;i<=n;i++){
+      var int2=bal*r, prin2=e2-int2;
+      ti+=int2; tp+=prin2; bal-=prin2;
+      html+='<tr><td>'+(gm+i)+'</td><td>'+fmtn(e2)+'</td><td>'+fmtn(prin2)+'</td><td>'+fmtn(int2)+'</td><td>'+fmtn(Math.max(0,bal))+'</td></tr>';
+    }
+  }
+  html+=totRows(tp,ti+capInt);
+  g(tbId).innerHTML=html;
+  return newP;
 }
 
 // ── EMI সূত্র ──────────────────────────────────────────────
@@ -393,37 +486,29 @@ function doFR(){
   var P=num('fr-p'),R=num('fr-r'),N=num('fr-n');
   if(!valid(P,R,N))return;
   var gr=getGrace('fr');
-  var mi=P*R/100/12;
-  var mp=P/N;
-  var monthly=mp+mi;
-  var ti=mi*N;
-  var tp=P+ti;
+  var mi=P*R/100/12, mp=P/N, monthly=mp+mi;
+  var ti=mi*N, tp=P+ti;
   var apr=(ti/P)*(12/N)*100;
-
-  // গ্রেস সুদ
   var gPay=0,gTi=0;
   if(gr.type==='paid'&&gr.months>0){gPay=mi;gTi=mi*gr.months;}
-  ti+=gTi; tp+=gTi;
-
+  if(gr.type!=='cap'){ti+=gTi;tp+=gTi;}
   g('fr-m').textContent=fmt(monthly);
   g('fr-ti').textContent=fmt(ti);
   g('fr-tp').textContent=fmt(tp);
   g('fr-ap').textContent=apr.toFixed(2)+'%';
-
-  if(gr.type!=='none'&&gr.months>0){
-    g('fr-gp').textContent=gr.type==='free'?'\u09B6\u09C2\u09A8\u09CD\u09AF (\u09AA\u09C7\u09AE\u09C7\u09A8\u09CD\u099F \u09A8\u09C7\u0987)':fmt(gPay)+' (\u09B6\u09C1\u09A7\u09C1 \u09B8\u09C1\u09A6)';
-    show('fr-gres');
-  } else {hide('fr-gres');}
-
+  if(gr.type==='paid'&&gr.months>0){g('fr-gp').textContent=fmt(gPay)+' (\u09B6\u09C1\u09A7\u09C1 \u09B8\u09C1\u09A6)';show('fr-gres');}
+  else if(gr.type==='free'&&gr.months>0){g('fr-gp').textContent='\u09B6\u09C2\u09A8\u09CD\u09AF (\u09AA\u09C7\u09AE\u09C7\u09A8\u09CD\u099F \u09A8\u09C7\u0987)';show('fr-gres');}
+  else if(gr.type==='cap'&&gr.months>0){g('fr-gp').textContent='\u09B6\u09C2\u09A8\u09CD\u09AF - \u09B8\u09C1\u09A6 \u0986\u09B8\u09B2\u09C7 \u09AF\u09CB\u0997 \u09B9\u099A\u09CD\u099B\u09C7';show('fr-gres');}
+  else{hide('fr-gres');}
   show('fr-res');
-
   var bal=P,html='';
-  // গ্রেস সারি
-  if(gr.months>0) html+=graceRows(gr.months,gr.type==='paid'?gPay:0,gr.type==='paid'?mi:0,P,gr.type);
+  if(gr.months>0&&gr.type!=='cap') html+=graceRows(gr.months,gPay,gr.type==='paid'?mi:0,P,gr.type,mi/P);
   for(var i=1;i<=N;i++){bal-=mp;html+='<tr><td>'+(gr.months+i)+'</td><td>'+fmtn(monthly)+'</td><td>'+fmtn(mp)+'</td><td>'+fmtn(mi)+'</td><td>'+fmtn(Math.max(0,bal))+'</td></tr>';}
   html+=totRows(P,mi*N+gTi);
   g('fr-tb').innerHTML=html;
   show('fr-sc');
+  if(gr.type==='cap'&&gr.months>0){capSched(P,mi/P,N,gr.months,'fr-cap-tb','fr-cap-info','flat');show('fr-cap-sc');}
+  else{hide('fr-cap-sc');}
   stored.fr={P,R,N,monthly,ti,tp,gr};
 }
 
@@ -431,10 +516,8 @@ function doFR(){
 function emiSched(P,r,n,gm,gType,tbId){
   var e=emi(P,r,n),bal=P,html='',tp=0,ti=0;
   var gInt=P*r,gPay=gType==='paid'?gInt:0,gTi=gType==='paid'?gInt*gm:0;
-
-  // গ্রেস সারি
-  if(gm>0) html+=graceRows(gm,gPay,gType==='paid'?gInt:0,P,gType);
-
+  if(gType==='cap') gTi=0;
+  if(gm>0&&gType!=='cap') html+=graceRows(gm,gPay,gType==='paid'?gInt:0,P,gType,r);
   for(var i=1;i<=n;i++){
     var int=bal*r,prin=e-int;
     ti+=int;tp+=prin;bal-=prin;
@@ -458,11 +541,13 @@ function doMR(){
   g('mr-ap').textContent=apr.toFixed(2)+'%';
   g('mr-ti').textContent=fmt(res.tInt);
   g('mr-tp').textContent=fmt(res.tPay);
-  if(gr.type!=='none'&&gr.months>0){
-    g('mr-gp').textContent=gr.type==='free'?'\u09B6\u09C2\u09A8\u09CD\u09AF (\u09AA\u09C7\u09AE\u09C7\u09A8\u09CD\u099F \u09A8\u09C7\u0987)':fmt(res.gPay)+' (\u09B6\u09C1\u09A7\u09C1 \u09B8\u09C1\u09A6)';
-    show('mr-gres');
-  }else{hide('mr-gres');}
+  if(gr.type==='paid'&&gr.months>0){g('mr-gp').textContent=fmt(res.gPay)+' (\u09B6\u09C1\u09A7\u09C1 \u09B8\u09C1\u09A6)';show('mr-gres');}
+  else if(gr.type==='free'&&gr.months>0){g('mr-gp').textContent='\u09B6\u09C2\u09A8\u09CD\u09AF';show('mr-gres');}
+  else if(gr.type==='cap'&&gr.months>0){g('mr-gp').textContent='\u09B6\u09C2\u09A8\u09CD\u09AF - \u09B8\u09C1\u09A6 \u09AF\u09CB\u0997 \u09B9\u099A\u09CD\u099B\u09C7';show('mr-gres');}
+  else{hide('mr-gres');}
   show('mr-res');show('mr-sc');
+  if(gr.type==='cap'&&gr.months>0){capSched(P,r,N,gr.months,'mr-cap-tb','mr-cap-info','emi');show('mr-cap-sc');}
+  else{hide('mr-cap-sc');}
   stored.mr={P,R,N,emi:res.emi,ti:res.tInt,tp:res.tPay,r,apr,gr};
 }
 
@@ -479,11 +564,13 @@ function doQR(){
   g('qr-ap').textContent=apr.toFixed(2)+'%';
   g('qr-ti').textContent=fmt(res.tInt);
   g('qr-tp').textContent=fmt(res.tPay);
-  if(gr.type!=='none'&&gr.months>0){
-    g('qr-gp').textContent=gr.type==='free'?'\u09B6\u09C2\u09A8\u09CD\u09AF (\u09AA\u09C7\u09AE\u09C7\u09A8\u09CD\u099F \u09A8\u09C7\u0987)':fmt(res.gPay)+' (\u09B6\u09C1\u09A7\u09C1 \u09B8\u09C1\u09A6)';
-    show('qr-gres');
-  }else{hide('qr-gres');}
+  if(gr.type==='paid'&&gr.months>0){g('qr-gp').textContent=fmt(res.gPay)+' (\u09B6\u09C1\u09A7\u09C1 \u09B8\u09C1\u09A6)';show('qr-gres');}
+  else if(gr.type==='free'&&gr.months>0){g('qr-gp').textContent='\u09B6\u09C2\u09A8\u09CD\u09AF';show('qr-gres');}
+  else if(gr.type==='cap'&&gr.months>0){g('qr-gp').textContent='\u09B6\u09C2\u09A8\u09CD\u09AF - \u09B8\u09C1\u09A6 \u09AF\u09CB\u0997 \u09B9\u099A\u09CD\u099B\u09C7';show('qr-gres');}
+  else{hide('qr-gres');}
   show('qr-res');show('qr-sc');
+  if(gr.type==='cap'&&gr.months>0){capSched(P,r,N,gr.months,'qr-cap-tb','qr-cap-info','emi');show('qr-cap-sc');}
+  else{hide('qr-cap-sc');}
   stored.qr={P,R,N,emi:res.emi,ti:res.tInt,tp:res.tPay,r,apr,gr};
 }
 
@@ -494,9 +581,8 @@ function doRB(){
   var gr=getGrace('rb');
   var mr=R/100/12,mp=P/N,bal=P,ti=0,html='',f=0,l=0;
   var gInt=P*mr,gPay=gr.type==='paid'?gInt:0,gTi=gr.type==='paid'?gInt*gr.months:0;
-
-  if(gr.months>0) html+=graceRows(gr.months,gPay,gr.type==='paid'?gInt:0,P,gr.type);
-
+  if(gr.type==='cap') gTi=0;
+  if(gr.months>0&&gr.type!=='cap') html+=graceRows(gr.months,gPay,gr.type==='paid'?gInt:0,P,gr.type,mr);
   for(var i=1;i<=N;i++){
     var int=bal*mr,pay=mp+int;
     ti+=int;bal-=mp;
@@ -508,13 +594,15 @@ function doRB(){
   g('rb-l').textContent=fmt(l);
   g('rb-ti').textContent=fmt(ti+gTi);
   g('rb-tp').textContent=fmt(P+ti+gTi);
-  if(gr.type!=='none'&&gr.months>0){
-    g('rb-gp').textContent=gr.type==='free'?'\u09B6\u09C2\u09A8\u09CD\u09AF (\u09AA\u09C7\u09AE\u09C7\u09A8\u09CD\u099F \u09A8\u09C7\u0987)':fmt(gPay)+' (\u09B6\u09C1\u09A7\u09C1 \u09B8\u09C1\u09A6)';
-    show('rb-gres');
-  }else{hide('rb-gres');}
+  if(gr.type==='paid'&&gr.months>0){g('rb-gp').textContent=fmt(gPay)+' (\u09B6\u09C1\u09A7\u09C1 \u09B8\u09C1\u09A6)';show('rb-gres');}
+  else if(gr.type==='free'&&gr.months>0){g('rb-gp').textContent='\u09B6\u09C2\u09A8\u09CD\u09AF';show('rb-gres');}
+  else if(gr.type==='cap'&&gr.months>0){g('rb-gp').textContent='\u09B6\u09C2\u09A8\u09CD\u09AF - \u09B8\u09C1\u09A6 \u09AF\u09CB\u0997 \u09B9\u099A\u09CD\u099B\u09C7';show('rb-gres');}
+  else{hide('rb-gres');}
   show('rb-res');
   g('rb-tb').innerHTML=html;
   show('rb-sc');
+  if(gr.type==='cap'&&gr.months>0){capSched(P,mr,N,gr.months,'rb-cap-tb','rb-cap-info','rb');show('rb-cap-sc');}
+  else{hide('rb-cap-sc');}
   stored.rb={P,R,N,f,l,ti:ti+gTi,tp:P+ti+gTi,gr};
 }
 
@@ -523,22 +611,26 @@ function doBP(){
   var P=num('bp-p'),R=num('bp-r'),N=num('bp-n');
   if(!valid(P,R,N))return;
   var gr=getGrace('bp');
-  var mi=P*R/100/12,fi=P+mi,ti=mi*N,tp=P+ti;
+  var mi=P*R/100/12,ti=mi*N,tp=P+ti;
   var gPay=gr.type==='paid'?mi:0,gTi=gr.type==='paid'?mi*gr.months:0;
-  ti+=gTi;tp+=gTi;
-
-  g('bp-m').textContent=fmt(mi);
+  if(gr.type!=='cap'){ti+=gTi;tp+=gTi;}
+  // cap: new P = P + interest accrued
+  var newP=P,capInt=0;
+  if(gr.type==='cap'&&gr.months>0){capInt=mi*gr.months;newP=P+capInt;}
+  var fi=newP+newP*R/100/12;
+  var mi2=newP*R/100/12;
+  if(gr.type==='cap'){ti=mi2*N+capInt;tp=newP+mi2*N+capInt;}
+  g('bp-m').textContent=fmt(gr.type==='cap'?mi:mi);
   g('bp-fi').textContent=fmt(fi);
   g('bp-ti').textContent=fmt(ti);
   g('bp-tp').textContent=fmt(tp);
-  if(gr.type!=='none'&&gr.months>0){
-    g('bp-gp').textContent=gr.type==='free'?'\u09B6\u09C2\u09A8\u09CD\u09AF (\u09AA\u09C7\u09AE\u09C7\u09A8\u09CD\u099F \u09A8\u09C7\u0987)':fmt(gPay)+' (\u09B6\u09C1\u09A7\u09C1 \u09B8\u09C1\u09A6)';
-    show('bp-gres');
-  }else{hide('bp-gres');}
+  if(gr.type==='paid'&&gr.months>0){g('bp-gp').textContent=fmt(gPay)+' (\u09B6\u09C1\u09A7\u09C1 \u09B8\u09C1\u09A6)';show('bp-gres');}
+  else if(gr.type==='free'&&gr.months>0){g('bp-gp').textContent='\u09B6\u09C2\u09A8\u09CD\u09AF';show('bp-gres');}
+  else if(gr.type==='cap'&&gr.months>0){g('bp-gp').textContent='\u09B6\u09C2\u09A8\u09CD\u09AF - \u09B8\u09C1\u09A6 \u09AF\u09CB\u0997 \u09B9\u099A\u09CD\u099B\u09C7';show('bp-gres');}
+  else{hide('bp-gres');}
   show('bp-res');
-
   var html='';
-  if(gr.months>0) html+=graceRows(gr.months,gPay,gr.type==='paid'?mi:0,P,gr.type);
+  if(gr.months>0&&gr.type!=='cap') html+=graceRows(gr.months,gPay,gr.type==='paid'?mi:0,P,gr.type,mi/P);
   for(var i=1;i<=N;i++){
     var last=i===N;
     html+='<tr><td>'+(gr.months+i)+'</td><td>'+fmtn(last?fi:mi)+'</td><td>'+fmtn(last?P:0)+'</td><td>'+fmtn(mi)+'</td><td>'+fmtn(last?0:P)+'</td></tr>';
@@ -546,6 +638,17 @@ function doBP(){
   html+=totRows(P,mi*N+gTi);
   g('bp-tb').innerHTML=html;
   show('bp-sc');
+  if(gr.type==='cap'&&gr.months>0){
+    // cap schedule for bullet
+    var capHtml='',bG=P;
+    for(var i=1;i<=gr.months;i++){var iA=bG*R/100/12;bG+=iA;capHtml+='<tr class="grace-row"><td>\u0997\u09CD\u09B0\u09C7\u09B8-'+i+'</td><td>0</td><td>0</td><td>'+fmtn(Math.round(iA))+'</td><td>'+fmtn(Math.round(bG))+'</td></tr>';}
+    var newMI=bG*R/100/12;
+    for(var i=1;i<=N;i++){var last2=i===N;capHtml+='<tr><td>'+(gr.months+i)+'</td><td>'+fmtn(last2?bG+newMI:newMI)+'</td><td>'+fmtn(last2?bG:0)+'</td><td>'+fmtn(newMI)+'</td><td>'+fmtn(last2?0:bG)+'</td></tr>';}
+    capHtml+=totRows(bG,newMI*N+capInt);
+    g('bp-cap-tb').innerHTML=capHtml;
+    g('bp-cap-info').innerHTML='<strong>\u09AE\u09C2ল \u098B\u09A3:</strong> \u09F3'+Math.round(P).toLocaleString()+'<br><strong>\u09AF\u09CB\u0997 \u09B8\u09C1\u09A6:</strong> \u09F3'+Math.round(capInt).toLocaleString()+'<br><strong>\u09A8\u09A4\u09C1\u09A8 \u0986\u09B8\u09B2:</strong> \u09F3'+Math.round(bG).toLocaleString();
+    show('bp-cap-sc');
+  }else{hide('bp-cap-sc');}
   stored.bp={P,R,N,mi,fi,ti,tp,gr};
 }
 
