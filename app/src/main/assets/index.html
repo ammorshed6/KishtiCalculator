@@ -399,8 +399,8 @@ tr.grace-row td:first-child{font-weight:700;color:#FF8F00;}
 function g(id){return document.getElementById(id);}
 function show(id){g(id).classList.remove('hidden');}
 function hide(id){g(id).classList.add('hidden');}
-function fmt(n){return '\u09F3'+Math.round(n).toLocaleString();}
-function fmtn(n){return Math.round(n).toLocaleString();}
+function fmt(n){return '৳'+(+n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+function fmtn(n){return (+(n)).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
 
 function toast(msg){
   var t=g('toast');t.textContent=msg;t.style.display='block';
